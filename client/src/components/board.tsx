@@ -15,6 +15,7 @@ function BackgammonBoard() {
   const navigate = useNavigate();
   const [validMoves, setValidMoves] = useState<ValidMoves>({});
   const [currentTurn, setCurrentTurn] = useState<string>("");
+  const [playerColors, setPlayerColors] = useState<Record<string, string>>({});
   const [previousPosition, setPreviousPosition] = useState<number | null>(null);
   const [currentDice, setCurrentDice] = useState<number[]>([]);
   const [currentLocations, setCurrentLocations] = useState<
@@ -46,6 +47,7 @@ function BackgammonBoard() {
   }, [currentDice]);
 
   useEffect(() => {
+    fetchColor();
     fetchGameState();
   }, []);
 
@@ -286,6 +288,26 @@ function BackgammonBoard() {
       setCurrentLocations(data.checkers_location);
     } catch (error) {
       console.error("Error restarting game:", error);
+    }
+  };
+
+  const fetchColor = async () => {
+    try {
+      const response = await fetch("/api/fetch_color");
+      const data = await response.json();
+      if (data.current_color == "black") {
+        setPlayerColors({
+          [data.current_turn]: "#696969",
+          [data.other_turn]: "#ffffff",
+        });
+      } else {
+        setPlayerColors({
+          [data.current_turn]: "#ffffff",
+          [data.other_turn]: "#696969",
+        });
+      }
+    } catch (error) {
+      console.error("Error checking if there is a winner:", error);
     }
   };
 
@@ -757,7 +779,14 @@ function BackgammonBoard() {
         </div>
       </div>
 
-      <div className="turn">Current Turn: {currentTurn}</div>
+      <div className="name-container">
+        <div className="turn">Current Turn: {currentTurn}</div>
+        <div className="name-checker"
+             style={{
+              backgroundColor: playerColors[currentTurn], // Change colors as needed
+             }}>
+        </div>
+      </div>
 
       <div className="rolls">Rolls: {currentDice.toString()}</div>
     </div>

@@ -211,6 +211,17 @@ def restart_game():
         }
     )
 
+@app.route("/fetch_color", methods=["GET"])
+def fetch_color():
+    return jsonify(
+        {
+            "current_turn": game.players[0].name,
+            "current_color": game.players[0].color,
+            "other_turn": game.players[1].name,
+            "other_color": game.players[1].color,
+        }
+    )
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=True)

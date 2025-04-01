@@ -1,7 +1,6 @@
 body {
   font-family: Times;
   background-color: rgb(136, 193, 211);
-  padding-bottom: 1000;
 }
 
 .container {
@@ -9,7 +8,6 @@ body {
 }
 
 .popup {
-  position: fixed;
   width: 350px;
   height: 200px;
   padding: 10px 30px 10px 30px;
@@ -534,17 +532,6 @@ body {
   opacity: 0.5;
 }
 
-.turn {
-  font-family: Times;
-  position: absolute;
-  text-align: center;
-  margin-top: 50px;
-  font-size: 36px;
-  top: 90%;
-  left: 2%;
-  margin: 0px;
-}
-
 .rolls {
   font-family: Times;
   position: absolute;
@@ -597,4 +584,31 @@ body {
   top: 65%;
   font-weight: normal;
   font-size: 40px;
+}
+
+.name-container {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  gap: 10px;
+  width: 100%;
+  top: 90%;
+  left: 2%;
+}
+
+.turn {
+  font-family: Times;
+  text-align: center;
+  font-size: 36px;
+  margin: 0px;
+}
+
+.name-checker {
+  width: 36px;
+  height: 36px;
+  opacity: 1;
+  border-radius: 18px;
+  transition: left 1s ease-in-out, top 1s ease-in-out, width 1s ease-in-out,
+    height 1s ease-in-out;
+  z-index: 1;
 }
