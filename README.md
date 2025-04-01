@@ -133,17 +133,17 @@ Make sure you have the following installed:
 
 Backgammon-Website/
 ├── client/                # Frontend code
-
+|   |
 │   ├── src/
-
+|   |
 │   │   ├── components/    # React components
-
+|   |
 │   │   ├── styles/        # CSS files
-
+|   |
 │   │   ├── App.tsx        # Main app component
-
+|   |
 │   │   ├── main.tsx       # Entry point for React
-
+|   |
 │   └── vite.config.ts     # Vite configuration
 
 ├── flask-server/          # Backend code
