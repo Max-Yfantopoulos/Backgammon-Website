@@ -15,6 +15,7 @@ A web-based Backgammon game where users can play against an AI or another player
 - [Project Structure](#project-structure)
 - [Future Improvements](#future-improvements)
 - [License](#license)
+- [Acknowledgments](#Acknowledgments)
 
 ---
 
@@ -130,7 +131,19 @@ Make sure you have the following installed:
 
 ## Project Structure
 
-Backgammon-Website/ ├── client/ # Frontend code │ ├── src/ # Source files for the React app │ │ ├── components/ # React components (e.g., Board, Home) │ │ ├── styles/ # CSS files for styling │ │ ├── App.tsx # Main app component │ │ ├── main.tsx # Entry point for the React app │ └── vite.config.ts # Vite configuration file ├── flask-server/ # Backend code │ ├── server.py # Flask server with API endpoints │ ├── OOP_Backgammon.py # Game logic and classes │ └── requirements.txt # Python dependencies └── README.md # Project documentation
+Backgammon-Website/
+├── client/                # Frontend code
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── styles/        # CSS files
+│   │   ├── App.tsx        # Main app component
+│   │   ├── main.tsx       # Entry point for React
+│   └── vite.config.ts     # Vite configuration
+├── flask-server/          # Backend code
+│   ├── server.py          # Flask server
+│   ├── OOP_Backgammon.py  # Game logic
+│   └── requirements.txt   # Python dependencies
+└── [README.md](http://_vscodecontentref_/2)
 
 ## Future Improvements
 
@@ -141,6 +154,10 @@ Backgammon-Website/ ├── client/ # Frontend code │ ├── src/ # Sourc
 - Add animations for dice rolls and checker movements.
   
 - Implement user authentication and game history tracking.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Acknowledgments
 
