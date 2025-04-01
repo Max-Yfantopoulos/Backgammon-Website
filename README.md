@@ -80,7 +80,7 @@ Make sure you have the following installed:
    cd ../flask-server
    pip install -r requirements.txt
 
-### Running the Project
+## Running the Project
 
 ### Start the Backend
 
@@ -98,7 +98,7 @@ Make sure you have the following installed:
 3. Open your browser and navigate to:
    http://localhost:5174
 
-### How to Run the Game
+## How to Run the Game
 
 ### 1. Start the Backend and Frontend:
 
@@ -128,7 +128,7 @@ Make sure you have the following installed:
 
 - The game ends when one player successfully moves all their checkers off the board.
 
-### Project Structure
+## Project Structure
 
 Backgammon-Website/
 ├── client/                # Frontend code
@@ -144,7 +144,7 @@ Backgammon-Website/
 │   └── requirements.txt   # Python dependencies
 └── [README.md](http://_vscodecontentref_/2)              # Project documentation
 
-### Future Improvements
+## Future Improvements
 
 - Add real-time multiplayer functionality using WebSockets.
   
@@ -154,8 +154,8 @@ Backgammon-Website/
   
 - Implement user authentication and game history tracking.
 
-### Acknowledgments
+## Acknowledgments
 
-Inspired by the classic board game Backgammon.
+- Inspired by the classic board game Backgammon.
 
-Special thanks to the creators of React and Flask for their amazing tools.
+- Special thanks to the creators of React and Flask for their amazing tools.
