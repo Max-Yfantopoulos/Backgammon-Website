@@ -103,7 +103,7 @@ Make sure you have the following installed:
 ### 1. Start the Backend and Frontend:
 
 - Follow the steps in the Running the Project section to start both the backend and frontend servers.
-- 
+  
 ### 2. Navigate to the Game:
 
 -Open your browser and go to http://localhost:5174.
@@ -130,19 +130,7 @@ Make sure you have the following installed:
 
 ## Project Structure
 
-Backgammon-Website/
-├── client/                # Frontend code
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── styles/        # CSS files
-│   │   ├── App.tsx        # Main app component
-│   │   ├── main.tsx       # Entry point for React
-│   └── vite.config.ts     # Vite configuration
-├── flask-server/          # Backend code
-│   ├── server.py          # Flask server
-│   ├── OOP_Backgammon.py  # Game logic
-│   └── requirements.txt   # Python dependencies
-└── [README.md](http://_vscodecontentref_/2)              # Project documentation
+Backgammon-Website/ ├── client/ # Frontend code │ ├── src/ # Source files for the React app │ │ ├── components/ # React components (e.g., Board, Home) │ │ ├── styles/ # CSS files for styling │ │ ├── App.tsx # Main app component │ │ ├── main.tsx # Entry point for the React app │ └── vite.config.ts # Vite configuration file ├── flask-server/ # Backend code │ ├── server.py # Flask server with API endpoints │ ├── OOP_Backgammon.py # Game logic and classes │ └── requirements.txt # Python dependencies └── README.md # Project documentation
 
 ## Future Improvements
 
