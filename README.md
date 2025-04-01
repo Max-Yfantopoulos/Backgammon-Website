@@ -160,6 +160,7 @@ Backgammon-Website/
 ├── flask-server/          # Backend code
 │   ├── server.py          # Flask server
 │   ├── OOP_Backgammon.py  # Game logic
+│   ├── MCTS.py            # AI
 │   └── requirements.txt   # Python dependencies
 │
 └── README.md              # Project documentation
