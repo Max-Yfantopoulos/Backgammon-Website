@@ -133,16 +133,27 @@ Make sure you have the following installed:
 
 Backgammon-Website/
 ├── client/                # Frontend code
+
 │   ├── src/
+
 │   │   ├── components/    # React components
+
 │   │   ├── styles/        # CSS files
+
 │   │   ├── App.tsx        # Main app component
+
 │   │   ├── main.tsx       # Entry point for React
+
 │   └── vite.config.ts     # Vite configuration
+
 ├── flask-server/          # Backend code
+
 │   ├── server.py          # Flask server
+
 │   ├── OOP_Backgammon.py  # Game logic
+
 │   └── requirements.txt   # Python dependencies
+
 └── [README.md](http://_vscodecontentref_/2)
 
 ## Future Improvements
