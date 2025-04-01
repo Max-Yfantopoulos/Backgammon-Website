@@ -92,14 +92,45 @@ Make sure you have the following installed:
 
 ### Start the Backend
 
-1. Navigate to the backend directory:
+1. Create virutal environment:
+
+  It is recommended to create a virtual environment to isolate the project's dependencies. Run the following command:
+
+  ```bash
+  python3 -m venv venv
+  ```
+
+2. Activate the virtual environment:
+   - On Mac/Linux:
+     ```source venv/bin/activate```
+   - One Windows:
+     ```venv\Scripts\activate```
+
+     Once activated, your terminal prompt will change to indicate that the virtual environment is active (e.g., (venv)).
+
+3. Install Dependencies:
+
+   Install the required Python packages using the requirements.txt file:
+
+   ```pip install -r [requirements.txt](http://_vscodecontentref_/3)```
+
+   This will install all the necessary dependencies for the Flask backend.
+
+4. Navigate to the backend directory:
    ```
    cd flask-server
    ```
-3. Run the Flask server:
+5. Run the Flask server:
    ```
    flask run --port=5001
    ```
+   The backend will now be running on http://localhost:5001.
+
+### Deactivating the Virtual Environment
+
+To deactivate the virtual environment, simply run:
+
+```deactivate```
 
 ### Start the Frontend:
 
@@ -107,11 +138,11 @@ Make sure you have the following installed:
    ```
    cd client
    ```
-3. Run the Vite development server:
+2. Run the Vite development server:
    ```
    npm run dev
    ```
-5. Open your browser and navigate to:
+3. Open your browser and navigate to:
    ```
    http://localhost:5174
    ```
