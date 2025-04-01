@@ -72,32 +72,47 @@ Make sure you have the following installed:
    ```bash
    git clone https://github.com/your-username/backgammon-website.git
    cd backgammon-website
+   ```
    
 2. Install frontend dependencies:
+   ```
    cd client
    npm install
+   ```
 
-3. Install backend dependencies:
+4. Install backend dependencies:
+   ```
    cd ../flask-server
    pip install -r requirements.txt
+   ```
 
 ## Running the Project
 
 ### Start the Backend
 
 1. Navigate to the backend directory:
+   ```
    cd flask-server
-2. Run the Flask server:
+   ```
+3. Run the Flask server:
+   ```
    flask run --port=5001
+   ```
 
 ### Start the Frontend:
 
 1. Navigate to the frontend directory:
+   ```
    cd client
-2. Run the Vite development server:
+   ```
+3. Run the Vite development server:
+   ```
    npm run dev
-3. Open your browser and navigate to:
+   ```
+5. Open your browser and navigate to:
+   ```
    http://localhost:5174
+   ```
 
 ## How to Run the Game
 
@@ -107,7 +122,7 @@ Make sure you have the following installed:
   
 ### 2. Navigate to the Game:
 
--Open your browser and go to http://localhost:5174.
+- Open your browser and go to http://localhost:5174.
 
 ### 3. Choose a Game Mode:
 
