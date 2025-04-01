@@ -130,7 +130,7 @@ Make sure you have the following installed:
 - The game ends when one player successfully moves all their checkers off the board.
 
 ## Project Structure
-
+```
 Backgammon-Website/
 ├── client/                # Frontend code
 │   ├── src/
@@ -146,7 +146,7 @@ Backgammon-Website/
 │   └── requirements.txt   # Python dependencies
 │
 └── README.md              # Project documentation
-
+```
 ## Future Improvements
 
 - Add real-time multiplayer functionality using WebSockets.
