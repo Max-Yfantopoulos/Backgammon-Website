@@ -129,32 +129,21 @@ Make sure you have the following installed:
 
 - The game ends when one player successfully moves all their checkers off the board.
 
-## Project Structure
-
 Backgammon-Website/
 ├── client/                # Frontend code
-|   |
 │   ├── src/
-|   |
 │   │   ├── components/    # React components
-|   |
 │   │   ├── styles/        # CSS files
-|   |
 │   │   ├── App.tsx        # Main app component
-|   |
 │   │   ├── main.tsx       # Entry point for React
-|   |
 │   └── vite.config.ts     # Vite configuration
-
+│
 ├── flask-server/          # Backend code
-
 │   ├── server.py          # Flask server
-
 │   ├── OOP_Backgammon.py  # Game logic
-
 │   └── requirements.txt   # Python dependencies
-
-└── [README.md](http://_vscodecontentref_/2)
+│
+└── README.md              # Project documentation
 
 ## Future Improvements
 
