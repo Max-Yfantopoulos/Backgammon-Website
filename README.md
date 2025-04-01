@@ -14,7 +14,6 @@ A web-based Backgammon game where users can play against an AI or another player
   - [Running the Project](#running-the-project)
 - [Project Structure](#project-structure)
 - [Future Improvements](#future-improvements)
-- [Contributing](#contributing)
 - [License](#license)
 
 ---
@@ -72,3 +71,91 @@ Make sure you have the following installed:
    ```bash
    git clone https://github.com/your-username/backgammon-website.git
    cd backgammon-website
+   
+2. Install frontend dependencies:
+   cd client
+   npm install
+
+3. Install backend dependencies:
+   cd ../flask-server
+   pip install -r requirements.txt
+
+### Running the Project
+
+### Start the Backend
+
+1. Navigate to the backend directory:
+   cd flask-server
+2. Run the Flask server:
+   flask run --port=5001
+
+### Start the Frontend:
+
+1. Navigate to the frontend directory:
+   cd client
+2. Run the Vite development server:
+   npm run dev
+3. Open your browser and navigate to:
+   http://localhost:5174
+
+### How to Run the Game
+
+### 1. Start the Backend and Frontend:
+
+- Follow the steps in the Running the Project section to start both the backend and frontend servers.
+- 
+### 2. Navigate to the Game:
+
+-Open your browser and go to http://localhost:5174.
+
+### 3. Choose a Game Mode:
+
+- Play Against AI: Enter your name in the input field and click the "Play AI" button.
+  
+- Multiplayer Mode: Enter both player names and click the "Play Multiplayer" button.
+  
+### 4. Gameplay:
+
+- Roll the dice to start your turn.
+  
+- Click on a checker to move it according to the dice roll.
+  
+- Use the undo/redo buttons to adjust your moves if needed.
+  
+- The game will automatically switch turns between players or between you and the AI.
+  
+### 5. Winning the Game:
+
+- The game ends when one player successfully moves all their checkers off the board.
+
+### Project Structure
+
+Backgammon-Website/
+├── client/                # Frontend code
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── styles/        # CSS files
+│   │   ├── App.tsx        # Main app component
+│   │   ├── main.tsx       # Entry point for React
+│   └── vite.config.ts     # Vite configuration
+├── flask-server/          # Backend code
+│   ├── server.py          # Flask server
+│   ├── OOP_Backgammon.py  # Game logic
+│   └── requirements.txt   # Python dependencies
+└── [README.md](http://_vscodecontentref_/2)              # Project documentation
+
+### Future Improvements
+
+- Add real-time multiplayer functionality using WebSockets.
+  
+- Improve AI logic for more challenging gameplay.
+
+- Add animations for dice rolls and checker movements.
+  
+- Implement user authentication and game history tracking.
+
+### Acknowledgments
+
+Inspired by the classic board game Backgammon.
+
+Special thanks to the creators of React and Flask for their amazing tools.
