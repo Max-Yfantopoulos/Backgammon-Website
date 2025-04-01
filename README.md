@@ -1,4 +1,3 @@
-# Backgammon-Website
 # Backgammon Website
 
 A web-based Backgammon game where users can play against an AI or another player. This project is built using **React** for the frontend and **Flask** for the backend, with a focus on providing a seamless and interactive gaming experience.
