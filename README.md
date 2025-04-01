@@ -129,6 +129,8 @@ Make sure you have the following installed:
 
 - The game ends when one player successfully moves all their checkers off the board.
 
+## Project Structure
+
 Backgammon-Website/
 ├── client/                # Frontend code
 │   ├── src/
