@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/board.css";
+
+const Backend_Url = process.env.REACT_APP_BACKEND_URL || "http://localhost:5001";
 
 interface CheckerLocation {
   x: number;
@@ -87,7 +89,7 @@ function BackgammonBoard() {
     if (position in validMoves && previousPosition != null) {
       try {
         const gameId = sessionStorage.getItem("game_id") || "";
-        const response = await fetch("/api/make_move", {
+        const response = await fetch(`${Backend_Url}/api/make_move`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -114,7 +116,7 @@ function BackgammonBoard() {
     } else if (position >= 0 && position <= 27) {
       try {
         const gameId = sessionStorage.getItem("game_id") || "";
-        const response = await fetch("/api/pick_start", {
+        const response = await fetch(`${Backend_Url}/api/pick_start`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -148,7 +150,7 @@ function BackgammonBoard() {
   const fetchGameState = async () => {
     try {
       const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch("/api/state", {
+      const response = await fetch(`${Backend_Url}/api/state`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -175,7 +177,7 @@ function BackgammonBoard() {
   const isPossibleMove = async () => {
     try {
       const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch("/api/is_possible_move", {
+      const response = await fetch(`${Backend_Url}/api/is_possible_move`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -197,7 +199,7 @@ function BackgammonBoard() {
     console.log("You rolled the dice.");
     try {
       const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch("/api/roll_dice", {
+      const response = await fetch(`${Backend_Url}/api/roll_dice`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -221,7 +223,7 @@ function BackgammonBoard() {
     try {
       console.log("play");
       const gameId = sessionStorage.getItem("game_id") || "";
-      const aiResponse = await fetch("/api/ai_play", {
+      const aiResponse = await fetch(`${Backend_Url}/api/ai_play`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -251,7 +253,7 @@ function BackgammonBoard() {
   const checkWinner = async () => {
     try {
       const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch("/api/check_winner", {
+      const response = await fetch(`${Backend_Url}/api/check_winner`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -271,7 +273,7 @@ function BackgammonBoard() {
   const undo = async () => {
     try {
       const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch("/api/undo", {
+      const response = await fetch(`${Backend_Url}/api/undo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -292,7 +294,7 @@ function BackgammonBoard() {
   const redo = async () => {
     try {
       const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch("/api/redo", {
+      const response = await fetch(`${Backend_Url}/api/redo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -313,7 +315,7 @@ function BackgammonBoard() {
   const changeTurn = async () => {
     try {
       const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch("/api/change_turn", {
+      const response = await fetch(`${Backend_Url}/api/change_turn`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -330,7 +332,7 @@ function BackgammonBoard() {
   const restartGame = async () => {
     try {
       const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch("/api/restart_game", {
+      const response = await fetch(`${Backend_Url}/api/restart_game`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -351,7 +353,7 @@ function BackgammonBoard() {
   const fetchColor = async () => {
     try {
       const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch("/api/fetch_color", {
+      const response = await fetch(`${Backend_Url}/api/fetch_color`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

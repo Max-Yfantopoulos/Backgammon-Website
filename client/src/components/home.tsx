@@ -1,6 +1,8 @@
-import React, { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
+
+const Backend_Url = process.env.REACT_APP_BACKEND_URL || "http://localhost:5001";
 
 function Home() {
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ function Home() {
     if (position == 0 && names.name1) {
       try {
         console.log("Sending request to startvsAI with:", names.name1);
-        const response = await fetch("/api/startvsAI", {
+        const response = await fetch(`${Backend_Url}/api/startvsAI`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -43,7 +45,7 @@ function Home() {
           names.name1,
           names.name2
         );
-        const response = await fetch("/api/startvsUser", {
+        const response = await fetch(`${Backend_Url}/api/startvsUser`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
