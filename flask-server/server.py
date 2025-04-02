@@ -9,7 +9,7 @@ import cProfile
 import pstats
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://backgammon-website.vercel.app"]}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5174", "https://backgammon-website.vercel.app"]}}, supports_credentials=True)
 
 @app.before_request
 def handle_options():
@@ -21,7 +21,7 @@ def home():
     return "Welcome to the Backgammon Game API!"
 
 
-@app.route("/startvsAI", methods=["POST"])
+@app.route("/api/startvsAI", methods=["POST"])
 def startvsAI():
     global games
     if "games" not in globals():
@@ -38,7 +38,7 @@ def startvsAI():
     return jsonify({"message": "Game started", "game_id": game_id}), 200
 
 
-@app.route("/startvsUser", methods=["POST"])
+@app.route("/api/startvsUser", methods=["POST"])
 def startvsUser():
     global games
     if "games" not in globals():
@@ -56,7 +56,7 @@ def startvsUser():
     return jsonify({"message": "Game started", "game_id": game_id}), 200
 
 
-@app.route("/state", methods=["GET"])
+@app.route("/api/state", methods=["GET"])
 def state():
     global games
     if "games" not in globals():
@@ -76,7 +76,7 @@ def state():
     )
 
 
-@app.route("/pick_start", methods=["POST"])
+@app.route("/api/pick_start", methods=["POST"])
 def pick_start():
     global games
     if "games" not in globals():
@@ -104,7 +104,7 @@ def pick_start():
     return response
 
 
-@app.route("/roll_dice", methods=["POST"])
+@app.route("/api/roll_dice", methods=["POST"])
 def roll_dice():
     global games
     if "games" not in globals():
@@ -126,7 +126,7 @@ def roll_dice():
         return jsonify({"message": "Rolls already available", "rolls": game.rolls})
 
 
-@app.route("/make_move", methods=["POST"])
+@app.route("/api/make_move", methods=["POST"])
 def make_move():
     global games
     if "games" not in globals():
@@ -161,7 +161,7 @@ def make_move():
     )
 
 
-@app.route("/ai_play", methods=["POST"])
+@app.route("/api/ai_play", methods=["POST"])
 def ai_play():
     global games
     if "games" not in globals():
@@ -190,7 +190,7 @@ def ai_play():
     )
 
 
-@app.route("/is_possible_move", methods=["GET"])
+@app.route("/api/is_possible_move", methods=["GET"])
 def is_possible_move():
     global games
     if "games" not in globals():
@@ -211,7 +211,7 @@ def is_possible_move():
     )
 
 
-@app.route("/check_winner", methods=["GET"])
+@app.route("/api/check_winner", methods=["GET"])
 def check_winner():
     global games
     if "games" not in globals():
@@ -232,7 +232,7 @@ def check_winner():
     )
 
 
-@app.route("/undo", methods=["POST"])
+@app.route("/api/undo", methods=["POST"])
 def undo():
     global games
     if "games" not in globals():
@@ -253,7 +253,7 @@ def undo():
     )
 
 
-@app.route("/redo", methods=["POST"])
+@app.route("/api/redo", methods=["POST"])
 def redo():
     global games
     if "games" not in globals():
@@ -274,7 +274,7 @@ def redo():
     )
 
 
-@app.route("/change_turn", methods=["POST"])
+@app.route("/api/change_turn", methods=["POST"])
 def change_turn():
     global games
     if "games" not in globals():
@@ -293,7 +293,7 @@ def change_turn():
     )
 
 
-@app.route("/restart_game", methods=["POST"])
+@app.route("/api/restart_game", methods=["POST"])
 def restart_game():
     global games
     if "games" not in globals():
@@ -314,7 +314,7 @@ def restart_game():
         }
     )
 
-@app.route("/fetch_color", methods=["GET"])
+@app.route("/api/fetch_color", methods=["GET"])
 def fetch_color():
     global games
     if "games" not in globals():
