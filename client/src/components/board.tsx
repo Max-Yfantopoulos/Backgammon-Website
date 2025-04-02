@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/board.css";
 
-const Backend_Url = process.env.REACT_APP_BACKEND_URL || "http://localhost:5001";
+const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
 
 interface CheckerLocation {
   x: number;
