@@ -117,7 +117,7 @@ function BackgammonBoard() {
       try {
         const gameId = sessionStorage.getItem("game_id") || "";
         const response = await fetch(`${Backend_Url}/api/pick_start`, {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             "Game-ID": gameId,
