@@ -9,8 +9,12 @@ import cProfile
 import pstats
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://backgammon-website.vercel.app"]}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://backgammon-website.vercel.app"]}}, supports_credentials=True)
 
+@app.before_request
+def handle_options():
+    if request.method == "OPTIONS":
+        return '', 200
 
 @app.route("/")
 def home():
