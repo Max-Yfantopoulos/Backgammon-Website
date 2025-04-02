@@ -86,10 +86,12 @@ function BackgammonBoard() {
     console.log("Current Dice: ", currentDice);
     if (position in validMoves && previousPosition != null) {
       try {
+        const gameId = sessionStorage.getItem("game_id") || "";
         const response = await fetch("/api/make_move", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Game-ID": gameId,
           },
           body: JSON.stringify({
             previousPosition,
@@ -111,10 +113,12 @@ function BackgammonBoard() {
       }
     } else if (position >= 0 && position <= 27) {
       try {
+        const gameId = sessionStorage.getItem("game_id") || "";
         const response = await fetch("/api/pick_start", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Game-ID": gameId,
           },
           body: JSON.stringify({ position }),
         });
@@ -143,7 +147,14 @@ function BackgammonBoard() {
 
   const fetchGameState = async () => {
     try {
-      const response = await fetch("/api/state");
+      const gameId = sessionStorage.getItem("game_id") || "";
+      const response = await fetch("/api/state", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Game-ID": gameId,
+        },
+      });
       const data = await response.json();
       console.log("Fetched Data:", data);
       if (data.current_turn) {
@@ -163,7 +174,14 @@ function BackgammonBoard() {
 
   const isPossibleMove = async () => {
     try {
-      const response = await fetch("/api/is_possible_move");
+      const gameId = sessionStorage.getItem("game_id") || "";
+      const response = await fetch("/api/is_possible_move", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Game-ID": gameId,
+        },
+      });
       const data = await response.json();
       if (data.message === "No Possible Move!") {
         setCurrentTurn(data.current_turn);
@@ -178,10 +196,12 @@ function BackgammonBoard() {
   const rollDice = async () => {
     console.log("You rolled the dice.");
     try {
+      const gameId = sessionStorage.getItem("game_id") || "";
       const response = await fetch("/api/roll_dice", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Game-ID": gameId,
         },
       });
 
@@ -200,10 +220,12 @@ function BackgammonBoard() {
   const fetchAIPlay = async () => {
     try {
       console.log("play");
+      const gameId = sessionStorage.getItem("game_id") || "";
       const aiResponse = await fetch("/api/ai_play", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Game-ID": gameId,
         },
       });
       console.log("done playing");
@@ -228,7 +250,14 @@ function BackgammonBoard() {
 
   const checkWinner = async () => {
     try {
-      const response = await fetch("/api/check_winner");
+      const gameId = sessionStorage.getItem("game_id") || "";
+      const response = await fetch("/api/check_winner", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Game-ID": gameId,
+        },
+      });
       const data = await response.json();
       if (data.message == "Winner!") {
         return true;
@@ -241,7 +270,14 @@ function BackgammonBoard() {
 
   const undo = async () => {
     try {
-      const response = await fetch("/api/undo");
+      const gameId = sessionStorage.getItem("game_id") || "";
+      const response = await fetch("/api/undo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Game-ID": gameId,
+        },
+      });
       const data = await response.json();
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
@@ -255,7 +291,14 @@ function BackgammonBoard() {
 
   const redo = async () => {
     try {
-      const response = await fetch("/api/redo");
+      const gameId = sessionStorage.getItem("game_id") || "";
+      const response = await fetch("/api/redo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Game-ID": gameId,
+        },
+      });
       const data = await response.json();
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
@@ -269,7 +312,14 @@ function BackgammonBoard() {
 
   const changeTurn = async () => {
     try {
-      const response = await fetch("/api/change_turn");
+      const gameId = sessionStorage.getItem("game_id") || "";
+      const response = await fetch("/api/change_turn", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Game-ID": gameId,
+        },
+      });
       const data = await response.json();
       setCurrentTurn(data.current_turn);
     } catch (error) {
@@ -279,7 +329,14 @@ function BackgammonBoard() {
 
   const restartGame = async () => {
     try {
-      const response = await fetch("/api/restart_game");
+      const gameId = sessionStorage.getItem("game_id") || "";
+      const response = await fetch("/api/restart_game", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Game-ID": gameId,
+        },
+      });
       const data = await response.json();
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
@@ -293,7 +350,14 @@ function BackgammonBoard() {
 
   const fetchColor = async () => {
     try {
-      const response = await fetch("/api/fetch_color");
+      const gameId = sessionStorage.getItem("game_id") || "";
+      const response = await fetch("/api/fetch_color", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Game-ID": gameId,
+        },
+      });
       const data = await response.json();
       if (data.current_color == "black") {
         setPlayerColors({

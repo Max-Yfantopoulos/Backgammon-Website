@@ -1,9 +1,12 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
+from flask_session import Session
 from OOP_Backgammon import Backgammon, Dice, Board
+import jwt
+import datetime
+import uuid
 import cProfile
 import pstats
-
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -16,20 +19,26 @@ def home():
 
 @app.route("/startvsAI", methods=["POST"])
 def startvsAI():
-    global game
+    global games
+    if "games" not in globals():
+        games = {}  # Initialize the games dictionary if it doesn't exist
     data = request.get_json()
     if not data:
         return jsonify({"error": "Invalid JSON"}), 400
     player_name = data.get("name")
     if not player_name:
         return jsonify({"error": "Missing 'name' field"}), 400
+    game_id = str(uuid.uuid4())
     game = Backgammon(name1="AI", name2=player_name, AI1="Monte", AI2="User")
-    return jsonify({"message": "Game started"}), 200
+    games[game_id] = game
+    return jsonify({"message": "Game started", "game_id": game_id}), 200
 
 
 @app.route("/startvsUser", methods=["POST"])
 def startvsUser():
-    global game
+    global games
+    if "games" not in globals():
+        games = {}  # Initialize the games dictionary if it doesn't exist
     data = request.json
     if not data:
         return jsonify({"error": "Invalid JSON"}), 400
@@ -37,14 +46,23 @@ def startvsUser():
     player_two_name = data.get("name2")
     if not player_one_name or not player_two_name:
         return jsonify({"error": "Missing 'name' field"}), 400
-    game = Backgammon(
-        name1=player_one_name, name2=player_two_name, AI1="User", AI2="User"
-    )
-    return jsonify({"message": "Game started"}), 200
+    game_id = str(uuid.uuid4())
+    game = Backgammon(name1=player_one_name, name2=player_two_name, AI1="User", AI2="User")
+    games[game_id] = game
+    return jsonify({"message": "Game started", "game_id": game_id}), 200
 
 
 @app.route("/state", methods=["GET"])
 def state():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     return jsonify(
         {
             "current_turn": game.players[game.current_turn].name,
@@ -56,6 +74,15 @@ def state():
 
 @app.route("/pick_start", methods=["POST"])
 def pick_start():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     data = request.json
     start = data.get("position")
     if start is None:
@@ -68,15 +95,6 @@ def pick_start():
             {
                 "message": game.message,
                 "current_turn": game.players[game.current_turn].name,
-                "rolls": game.rolls,
-                "dead_pieces": {
-                    "White": game.players[0].num_dead_pieces,
-                    "Black": game.players[1].num_dead_pieces,
-                },
-                "home_pieces": {
-                    "White": game.players[0].num_home_pieces,
-                    "Black": game.players[1].num_home_pieces,
-                },
             }
         )
     return response
@@ -84,6 +102,15 @@ def pick_start():
 
 @app.route("/roll_dice", methods=["POST"])
 def roll_dice():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     if game.rolls == [] and not game.end_of_turn:
         roll1, roll2 = Dice.roll_dice()
         game.rolls = [roll1, roll2] * 2 if roll1 == roll2 else [roll1, roll2]
@@ -97,6 +124,15 @@ def roll_dice():
 
 @app.route("/make_move", methods=["POST"])
 def make_move():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     data = request.json
     start = data.get("previousPosition")
     end = data.get("position")
@@ -123,6 +159,15 @@ def make_move():
 
 @app.route("/ai_play", methods=["POST"])
 def ai_play():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     while game.rolls != []:
         # profiler = cProfile.Profile()
         # profiler.enable()
@@ -143,6 +188,15 @@ def ai_play():
 
 @app.route("/is_possible_move", methods=["GET"])
 def is_possible_move():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     game.is_possible_move()
     return jsonify(
         {
@@ -155,6 +209,15 @@ def is_possible_move():
 
 @app.route("/check_winner", methods=["GET"])
 def check_winner():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     game.check_winner()
     return jsonify(
         {
@@ -165,8 +228,17 @@ def check_winner():
     )
 
 
-@app.route("/undo", methods=["GET"])
+@app.route("/undo", methods=["POST"])
 def undo():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     game.undo()
     return jsonify(
         {
@@ -177,8 +249,17 @@ def undo():
     )
 
 
-@app.route("/redo", methods=["GET"])
+@app.route("/redo", methods=["POST"])
 def redo():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     game.redo()
     return jsonify(
         {
@@ -189,8 +270,17 @@ def redo():
     )
 
 
-@app.route("/change_turn", methods=["GET"])
+@app.route("/change_turn", methods=["POST"])
 def change_turn():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     game.change_turn()
     return jsonify(
         {
@@ -199,8 +289,17 @@ def change_turn():
     )
 
 
-@app.route("/restart_game", methods=["GET"])
+@app.route("/restart_game", methods=["POST"])
 def restart_game():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     game.restart_game()
     return jsonify(
         {
@@ -213,6 +312,15 @@ def restart_game():
 
 @app.route("/fetch_color", methods=["GET"])
 def fetch_color():
+    global games
+    if "games" not in globals():
+        games = {}
+    game_id = request.headers.get("Game-ID")
+    if not game_id:
+        return jsonify({"error": "Missing Game-ID"}), 400
+    game = games.get(game_id)
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
     return jsonify(
         {
             "current_turn": game.players[0].name,

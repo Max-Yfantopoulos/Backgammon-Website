@@ -28,6 +28,9 @@ function Home() {
             name: names.name1,
           }),
         });
+        const data = await response.json();
+        const gameId = data.game_id;
+        sessionStorage.setItem("game_id", gameId);
         console.log("Sendinsup");
         navigate("/game");
       } catch (error) {
@@ -50,6 +53,9 @@ function Home() {
             name2: names.name2,
           }),
         });
+        const data = await response.json();
+        const gameId = data.game_id;
+        sessionStorage.setItem("game_id", gameId);
         console.log("USER GAME!!");
         navigate("/game");
       } catch (error) {
