@@ -2,7 +2,7 @@ import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
 
-const Backend_Url = process.env.REACT_APP_BACKEND_URL || "http://localhost:5001";
+const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
 
 function Home() {
   const navigate = useNavigate();
