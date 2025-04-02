@@ -21,7 +21,7 @@ def home():
 def startvsAI():
     global games
     if "games" not in globals():
-        games = {}  # Initialize the games dictionary if it doesn't exist
+        games = {}
     data = request.get_json()
     if not data:
         return jsonify({"error": "Invalid JSON"}), 400
@@ -38,7 +38,7 @@ def startvsAI():
 def startvsUser():
     global games
     if "games" not in globals():
-        games = {}  # Initialize the games dictionary if it doesn't exist
+        games = {}
     data = request.json
     if not data:
         return jsonify({"error": "Invalid JSON"}), 400
