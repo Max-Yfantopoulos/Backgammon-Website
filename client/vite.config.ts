@@ -9,9 +9,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         "/api": {
-          target: isProduction
-            ? "https://backgammon-website.onrender.com"
-            : "http://localhost:5001",
+          target: "https://backgammon-website.onrender.com",
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
