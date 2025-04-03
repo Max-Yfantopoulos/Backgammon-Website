@@ -322,6 +322,17 @@ class Backgammon:
             AI1=players[0].AI,
             AI2=players[1].AI,
         )
+        game.players[0].color = players[0].color
+        game.players[1].color = players[1].color
+        game.players[0].home_position = players[0].home_position
+        game.players[1].home_position = players[1].home_position
+        game.players[0].dead_position = players[0].dead_position
+        game.players[1].dead_position = players[1].dead_position
+        game.players[0].num_home_pieces = players[0].num_home_pieces
+        game.players[1].num_home_pieces = players[1].num_home_pieces
+        game.players[0].num_dead_pieces = players[0].num_dead_pieces
+        game.players[1].num_dead_pieces = players[1].num_dead_pieces
+
         game.game_board = Board.from_dict(data["game_board"])
         game.current_turn = data["current_turn"]
         game.rolls = data["rolls"]
