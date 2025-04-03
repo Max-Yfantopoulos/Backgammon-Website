@@ -1,49 +1,30 @@
 .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
   text-align: center;
 }
 
 .welcome {
-  position: absolute;
+  margin: 2.5% 0% 5% 0%;
   text-align: center;
-  margin-top: 50px;
   width: 100%;
   font-size: 36px;
   font-weight: bold;
-  top: -20px;
 }
 
-.AI-button {
-  position: absolute;
-  top: 50%;
-  left: 38%;
-  padding: 10px 30px 10px 30px;
-  border: 2px solid black;
-  border-radius: 25px;
-  background-color: white;
-  color: black;
-  font-weight: bold;
-  font-size: 20px;
-  text-align: center;
-  position: absolute;
-  transition: background-color 0.15s, color 0.15s, box-shadow 0.15s,
-    opacity 0.05s;
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.AI-button:hover {
-  background-color: black;
-  color: white;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
-}
-
-.AI-button:active {
-  opacity: 0.5;
-}
-
+.AI-button,
 .Multiplayer-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  padding: 10px 20px 10px 20px;
+  margin: 20px 10px;
+  padding: 10px 30px;
   border: 2px solid black;
   border-radius: 25px;
   background-color: white;
@@ -51,31 +32,29 @@
   font-weight: bold;
   font-size: 20px;
   text-align: center;
-  position: absolute;
   transition: background-color 0.15s, color 0.15s, box-shadow 0.15s,
     opacity 0.05s;
 }
 
+.AI-button:hover,
 .Multiplayer-button:hover {
   background-color: black;
   color: white;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
+.AI-button:active,
 .Multiplayer-button:active {
   opacity: 0.5;
 }
 
 .name-input-container {
+  margin: 2% 0% 2% 0%;
   text-align: center;
   font-family: Arial, sans-serif;
-  position: absolute;
-  left: 35%;
 }
 
 .name-input-container-1 {
-  position: absolute;
-  top: 125px;
   padding: 10px 20px 10px 20px;
   border: 2px solid black;
   border-radius: 25px;
@@ -83,8 +62,6 @@
 }
 
 .name-input-container-2 {
-  position: absolute;
-  top: 250px;
   padding: 10px 20px 10px 20px;
   border: 2px solid black;
   border-radius: 25px;

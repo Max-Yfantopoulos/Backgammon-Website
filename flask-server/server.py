@@ -206,7 +206,7 @@ def ai_play():
     )
 
 
-@app.route("/api/is_possible_move", methods=["GET"])
+@app.route("/api/is_possible_move", methods=["POST"])
 def is_possible_move():
     game_id = request.headers.get("Game-ID")
     if not game_id:
@@ -216,6 +216,7 @@ def is_possible_move():
         return jsonify({"error": "Game not found"}), 404
     game = Backgammon.from_json(game_data)
     game.is_possible_move()
+    save_game(game_id, game.to_json())
     return jsonify(
         {
             "message": game.message,
@@ -343,4 +344,4 @@ def fetch_color():
 
 if __name__ == "__main__":
     init_db()
-    app.run(host="0.0.0.0", port=5001) #Add debug=True for development
+    app.run(host="0.0.0.0", port=5001, debug=True) #Add debug=True for development

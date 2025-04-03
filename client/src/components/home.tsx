@@ -70,12 +70,6 @@ function Home() {
   return (
     <div className="container">
       <div className="welcome">Welcome To Maxgammon!</div>
-      <button className="AI-button" onClick={() => handleClick(0)}>
-        Play AI
-      </button>
-      <button className="Multiplayer-button" onClick={() => handleClick(1)}>
-        Play Multiplayer
-      </button>
       <div className="name-input-container name-input-container-1">
         <label htmlFor="name1">Player 1: </label>
         <input
@@ -97,6 +91,14 @@ function Home() {
           onChange={handleInputChange}
           placeholder="Type your name"
         />
+      </div>
+      <div className="button-container">
+        <button className="AI-button" onClick={() => handleClick(0)}>
+          Play AI
+        </button>
+        <button className="Multiplayer-button" onClick={() => handleClick(1)}>
+          Play Multiplayer
+        </button>
       </div>
     </div>
   );

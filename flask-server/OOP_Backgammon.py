@@ -533,6 +533,7 @@ class Backgammon:
         return False
 
     def change_turn(self):
+        print(f"Rolls: {self.rolls}, End of Turn: {self.end_of_turn}")
         if self.rolls == [] and self.end_of_turn:
             self.current_turn = (self.current_turn + 1) % 2
             self.end_of_turn = False
@@ -613,15 +614,20 @@ class Backgammon:
         return False
 
     def is_possible_move(self):
+        print(self.game_board.possible_starts(self.rolls, self.players[self.current_turn]))
         if (
             self.game_board.possible_starts(self.rolls, self.players[self.current_turn])
             != []
         ):
+            print("this should not be happening")
             self.message = "Possible Move!"
         else:
+            print("this should be happening")
             self.end_of_turn = True
             self.rolls = []
             self.message = "No Possible Move!"
+            print(self.end_of_turn)
+            print(self.rolls)
         return
 
     def make_move(self, start, end, possible):
