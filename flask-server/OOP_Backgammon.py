@@ -308,7 +308,7 @@ class Backgammon:
             "end_of_turn": self.end_of_turn,
             "message": self.message,
             "checkers": [checker.to_dict() for checker in self.checkers],
-            "columns": self.columns,
+            "columns": {key: value for key, value in self.columns.items()},
         })
     
     @classmethod
@@ -342,7 +342,7 @@ class Backgammon:
         game.end_of_turn = data["end_of_turn"]
         game.message = data["message"]
         game.checkers = [Checker.from_dict(c) for c in data["checkers"]]
-        game.columns = data["columns"]
+        game.columns = {int(key): value for key, value in data["columns"].items()}
         return game
     
     def update_locations(self, start, end):
