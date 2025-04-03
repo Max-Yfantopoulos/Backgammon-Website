@@ -97,7 +97,7 @@ def state():
     )
 
 
-@app.route("/api/pick_start", methods=["GET"])
+@app.route("/api/pick_start", methods=["POST"])
 def pick_start():
     game_id = request.headers.get("Game-ID")
     if not game_id:
