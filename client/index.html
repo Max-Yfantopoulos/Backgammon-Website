@@ -1,89 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/assets/dice.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Maxgammon</title>
-
-    <!-- ✅ Load Google Analytics -->
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HHGT1JY9H2"></script>
-
     <script>
       window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
-      // ✅ Check user consent from localStorage
-      let consentSettings = localStorage.getItem('consentMode');
-      
-      if (consentSettings === null) {
-        // Default to 'denied' if no consent given
-        gtag('consent', 'default', {
-          'ad_storage': 'denied',
-          'analytics_storage': 'denied',
-          'personalization_storage': 'denied',
-          'functionality_storage': 'denied',
-          'security_storage': 'denied'
-        });
-      } else {
-        // Apply saved user consent
-        gtag('consent', 'default', JSON.parse(consentSettings));
-      }
-
-      // ✅ Apply Google Analytics config ONLY if consent is granted
-      if (consentSettings && JSON.parse(consentSettings)['analytics_storage'] === 'granted') {
-        gtag('config', 'G-HHGT1JY9H2', { 'anonymize_ip': true });
-      }
-
-      // ✅ Set user ID if available
-      if (localStorage.getItem('userId') != null) {
-        window.dataLayer.push({
-          'user_id': localStorage.getItem('userId')
-        });
-      }
-
-      // ✅ Function to handle user consent from a custom banner
-      function acceptCookies() {
-        let consent = {
-          'ad_storage': 'granted',
-          'analytics_storage': 'granted',
-          'personalization_storage': 'granted',
-          'functionality_storage': 'granted',
-          'security_storage': 'granted'
-        };
-        localStorage.setItem('consentMode', JSON.stringify(consent));
-        gtag('consent', 'update', consent);
-        gtag('config', 'G-HHGT1JY9H2', { 'anonymize_ip': true }); // Re-enable GA
-        document.getElementById('cookie-banner').style.display = 'none';
-      }
-
-      function rejectCookies() {
-        let consent = {
-          'ad_storage': 'denied',
-          'analytics_storage': 'denied',
-          'personalization_storage': 'denied',
-          'functionality_storage': 'denied',
-          'security_storage': 'denied'
-        };
-        localStorage.setItem('consentMode', JSON.stringify(consent));
-        gtag('consent', 'update', consent);
-        document.getElementById('cookie-banner').style.display = 'none';
-      }
+      gtag('config', 'G-HHGT1JY9H2');
     </script>
+    <title>Maxgammon</title>
   </head>
   <body>
     <div id="root"></div>
-
-    <!-- ✅ Custom Cookie Banner -->
-    <div id="cookie-banner" style="position: fixed; bottom: 20px; left: 20px; background: white; padding: 10px; border: 1px solid #ccc;">
-      <p>We use cookies to improve your experience. Do you accept?</p>
-      <button onclick="acceptCookies()">Accept</button>
-      <button onclick="rejectCookies()">Reject</button>
-    </div>
-
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
