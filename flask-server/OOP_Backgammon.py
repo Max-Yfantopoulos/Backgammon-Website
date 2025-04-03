@@ -55,6 +55,7 @@ class Player:
         )
         player.num_home_pieces = data["num_home_pieces"]
         player.num_dead_pieces = data["num_dead_pieces"]
+        return player
 
 
 class Board:
@@ -819,6 +820,10 @@ class Backgammon:
 
 def main():
     game = Backgammon("Player1", "Player2", "Monte", "User")
+    jsondata = game.to_json()
+    print(jsondata)
+    gamedata = Backgammon.from_json(jsondata)
+    print(gamedata)
 
 
 if __name__ == "__main__":
