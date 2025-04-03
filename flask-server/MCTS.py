@@ -31,7 +31,7 @@ class MCTS:
         if len(self.all_possible_states) == 1:
             node = TreeNode(self.all_possible_states.pop(), self.root)
             return node
-        for i in range(10000):
+        for i in range(1000):
             node = self.select(self.root)
             score = self.rollout(node.game)
             self.backpropagate(node, score)
