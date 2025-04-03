@@ -1,24 +1,32 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Consent Banner Script -->
-    <!-- <script
+    <!-- Consent Manager Script -->
+    <script
       type="text/javascript"
       data-cmp-ab="1"
       src="https://cdn.consentmanager.net/delivery/autoblocking/00d69da31267d.js"
       data-cmp-host="d.delivery.consentmanager.net"
       data-cmp-cdn="cdn.consentmanager.net"
       data-cmp-codesrc="16"
-    ></script> -->
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HHGT1JY9H2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    ></script>
 
-      gtag('config', 'G-HHGT1JY9H2');
+    <!-- Google Analytics (gtag.js) Script, set to load only after consent -->
+    <script>
+      // Create the window.dataLayer for GA
+      window.dataLayer = window.dataLayer || [];
+      
+      // Function to push events to the dataLayer
+      function gtag(){dataLayer.push(arguments);}
+
+      // Wait for user consent before loading Google Analytics
+      consentmanager.onConsentGiven(function() {
+        // This code will run only after the user has given consent
+        gtag('js', new Date());
+        gtag('config', 'G-HHGT1JY9H2');  // Your GA4 tracking ID
+      });
     </script>
+
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/assets/dice.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,3 +37,4 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
+
