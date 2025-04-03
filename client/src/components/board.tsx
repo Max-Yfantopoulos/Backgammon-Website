@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/board.css";
 
 const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
+console.log("Backend URL:", Backend_Url);
 
 interface CheckerLocation {
   x: number;
