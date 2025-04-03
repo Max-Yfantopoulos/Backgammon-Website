@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
 
 const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
-console.log("Backend URL:", Backend_Url);
 
 function Home() {
   const navigate = useNavigate();
@@ -19,6 +18,7 @@ function Home() {
 
   const handleClick = async (position: number) => {
     console.log("You clicked on box:", position);
+    console.log("Backend URL:", Backend_Url);
     if (position == 0 && names.name1) {
       try {
         console.log("Sending request to startvsAI with:", names.name1);
