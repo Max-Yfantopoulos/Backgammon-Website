@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import copy
+import json
 from MCTS import *
 
 
@@ -12,6 +13,10 @@ class Checker:
 
     def to_dict(self):
         return {"id": self.id, "x": self.x, "y": self.y}
+    
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data["id"], data["x"], data["y"])
 
 
 class Dice:
@@ -29,11 +34,42 @@ class Player:
         self.num_dead_pieces = 0
         self.AI = AI
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "color": self.color,
+            "home_position": self.home_position,
+            "dead_position": self.dead_position,
+            "num_home_pieces": self.num_home_pieces,
+            "num_dead_pieces": self.num_dead_pieces,
+            "AI": self.AI,
+        }
+    @classmethod
+    def from_dict(cls, data):
+        player = cls(
+            data["name"],
+            data["color"],
+            data["home_position"],
+            data["dead_position"],
+            data["AI"],
+        )
+        player.num_home_pieces = data["num_home_pieces"]
+        player.num_dead_pieces = data["num_dead_pieces"]
+
 
 class Board:
     def __init__(self):
         self.board = np.zeros(24, dtype=int)
         self.setup_starting_positions()
+
+    def to_dict(self):
+        return {"board": self.board.tolist()}
+    
+    @classmethod
+    def from_dict(cls, data):
+        board = cls()
+        board.board = np.array(data["board"], dtype=int)
+        return board
 
     def __str__(self):
         top_row = " | ".join(
@@ -247,6 +283,45 @@ class Backgammon:
         self.state_hash_to_move = {}
         self.save_state()
 
+    def to_json(self):
+        """Serialize the game state to a JSON-compatible dictionary."""
+        return json.dumps({
+            "players": [player.to_dict() for player in self.players],
+            "game_board": self.game_board.to_dict(),
+            "current_turn": self.current_turn,
+            "rolls": self.rolls,
+            "history": self.history,
+            "history_pointer": self.history_pointer,
+            "real_game": self.real_game,
+            "end_of_turn": self.end_of_turn,
+            "message": self.message,
+            "checkers": [checker.to_dict() for checker in self.checkers],
+            "columns": self.columns,
+        })
+    
+    @classmethod
+    def from_json(cls, json_data):
+        """Deserialize the JSON data back into a Backgammon object."""
+        data = json.loads(json_data)
+        players = [Player.from_dict(p) for p in data["players"]]
+        game = cls(
+            name1=players[0].name,
+            name2=players[1].name,
+            AI1=players[0].AI,
+            AI2=players[1].AI,
+        )
+        game.game_board = Board.from_dict(data["game_board"])
+        game.current_turn = data["current_turn"]
+        game.rolls = data["rolls"]
+        game.history = data["history"]
+        game.history_pointer = data["history_pointer"]
+        game.real_game = data["real_game"]
+        game.end_of_turn = data["end_of_turn"]
+        game.message = data["message"]
+        game.checkers = [Checker.from_dict(c) for c in data["checkers"]]
+        game.columns = data["columns"]
+        return game
+    
     def update_locations(self, start, end):
         checker_idx = self.columns[start].pop()
         checker = self.checkers[checker_idx]
