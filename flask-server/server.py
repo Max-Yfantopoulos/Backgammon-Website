@@ -8,7 +8,7 @@ import cProfile
 import pstats
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:5174", "http://13.56.253.8"]}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5174", "http://maxgammon.xyz"]}}, supports_credentials=True)
 
 def init_db():
     conn = sqlite3.connect("games.db")
