@@ -290,7 +290,18 @@ class Backgammon:
             "game_board": self.game_board.to_dict(),
             "current_turn": self.current_turn,
             "rolls": self.rolls,
-            "history": self.history,
+            "history": [
+                {
+                "Board": state["Board"].to_dict(),
+                "Players": [player.to_dict() for player in state["Players"]],
+                "Current_turn": state["Current_turn"],
+                "Rolls": state["Rolls"],
+                "Columns": state["Columns"],
+                "Checkers": [checker.to_dict() for checker in state["Checkers"]],
+                "Message": state["Message"],
+                }
+                for state in self.history
+            ],
             "history_pointer": self.history_pointer,
             "real_game": self.real_game,
             "end_of_turn": self.end_of_turn,
@@ -313,7 +324,18 @@ class Backgammon:
         game.game_board = Board.from_dict(data["game_board"])
         game.current_turn = data["current_turn"]
         game.rolls = data["rolls"]
-        game.history = data["history"]
+        game.history = [
+            {
+                "Board": Board.from_dict(state["Board"]),
+                "Players": [Player.from_dict(player) for player in state["Players"]],
+                "Current_turn": state["Current_turn"],
+                "Rolls": state["Rolls"],
+                "Columns": state["Columns"],
+                "Checkers": [Checker.from_dict(checker) for checker in state["Checkers"]],
+                "Message": state["Message"],
+            }
+            for state in data["history"]
+        ]
         game.history_pointer = data["history_pointer"]
         game.real_game = data["real_game"]
         game.end_of_turn = data["end_of_turn"]
@@ -796,7 +818,7 @@ class Backgammon:
 
 
 def main():
-    game = Backgammon("AI", "Max", "Monte", "User")
+    game = Backgammon("Player1", "Player2", "Monte", "User")
 
 
 if __name__ == "__main__":
