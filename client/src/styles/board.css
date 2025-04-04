@@ -639,10 +639,11 @@ body {
   }
 }
 
-.shake {
+.shake-board {
   animation: shake 0.65s ease infinite;
+  transition: background-color 0.15s ease;
 }
 
-.shake:hover {
+.shake-board:hover {
   background-color: black !important;
 }

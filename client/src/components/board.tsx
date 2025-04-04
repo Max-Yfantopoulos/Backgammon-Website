@@ -423,10 +423,10 @@ function BackgammonBoard() {
         <button className="redo-button" onClick={() => handleClick(-4)}>
           ⟳
         </button>
-        <button className={`dice ${shakingButtons["dicebutton"] ? "shake" : ""}`} onClick={() => handleClick(-10)}>
+        <button className={`dice ${shakingButtons["dicebutton"] ? "shake-board" : ""}`} onClick={() => handleClick(-10)}>
           Press To Roll!
         </button>
-        <button className={`next-turn ${shakingButtons["donebutton"] ? "shake" : ""}`} onClick={() => handleClick(-5)}>
+        <button className={`next-turn ${shakingButtons["donebutton"] ? "shake-board" : ""}`} onClick={() => handleClick(-5)}>
           Done
         </button>
       </div>
