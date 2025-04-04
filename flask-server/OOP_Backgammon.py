@@ -219,37 +219,38 @@ class Backgammon:
         self.determine_first_turn()
         self.message = ""
         # [id, x, y] (1 is for black and -1 is for white)
+        # first starts at (9.33, 0). To move vertically, add or subtract 8. To move horzinotally, add or subtract 6.67. To go over middle gap, add or subtract 2.98
         self.checkers = [
-            Checker(0, 5.75, 0),
-            Checker(1, 5.75, 36),
-            Checker(2, 548.25, 0),
-            Checker(3, 548.25, 36),
-            Checker(4, 548.25, 72),
-            Checker(5, 548.25, 108),
-            Checker(6, 548.25, 144),
-            Checker(7, 358.25, 424),
-            Checker(8, 358.25, 388),
-            Checker(9, 358.25, 352),
-            Checker(10, 242.25, 424),
-            Checker(11, 242.25, 388),
-            Checker(12, 242.25, 352),
-            Checker(13, 242.25, 316),
-            Checker(14, 242.25, 280),
-            Checker(15, 5.25, 424),
-            Checker(16, 5.25, 388),
-            Checker(17, 548.25, 424),
-            Checker(18, 548.25, 388),
-            Checker(19, 548.25, 352),
-            Checker(20, 548.25, 316),
-            Checker(21, 548.25, 280),
-            Checker(22, 358.25, 0),
-            Checker(23, 358.25, 36),
-            Checker(24, 358.25, 72),
-            Checker(25, 242.25, 0),
-            Checker(26, 242.25, 36),
-            Checker(27, 242.25, 72),
-            Checker(28, 242.25, 108),
-            Checker(29, 242.25, 144),
+            Checker(0, 9.2, 0),
+            Checker(1, 9.2, 8),
+            Checker(2, 85.55, 0),
+            Checker(3, 85.55, 8),
+            Checker(4, 85.55, 16),
+            Checker(5, 85.55, 24),
+            Checker(6, 85.55, 32),
+            Checker(7, 58.87, 92),
+            Checker(8, 58.87, 84),
+            Checker(9, 58.87, 76),
+            Checker(10, 42.55, 92),
+            Checker(11, 42.55, 84),
+            Checker(12, 42.55, 76),
+            Checker(13, 42.55, 68),
+            Checker(14, 42.55, 60),
+            Checker(15, 9.2, 92),
+            Checker(16, 9.2, 84),
+            Checker(17, 85.55, 92),
+            Checker(18, 85.55, 84),
+            Checker(19, 85.55, 76),
+            Checker(20, 85.55, 68),
+            Checker(21, 85.55, 60),
+            Checker(22, 58.87, 0),
+            Checker(23, 58.87, 8),
+            Checker(24, 58.87, 16),
+            Checker(25, 42.55, 0),
+            Checker(26, 42.55, 8),
+            Checker(27, 42.55, 16),
+            Checker(28, 42.55, 24),
+            Checker(29, 42.55, 32),
         ]
         self.columns = {
             0: [0, 1],
@@ -361,104 +362,104 @@ class Backgammon:
         checker = self.checkers[checker_idx]
 
         if end == 26:
-            checker.x = 601.5
-            checker.y = len(self.columns[end]) * 11
+            checker.x = 0
+            checker.y = len(self.columns[end]) * 2.2
             self.columns[end].append(checker_idx)
         elif end == 27:
-            checker.x = 601.5
-            checker.y = 450 - len(self.columns[end]) * 11
+            checker.x = 0
+            checker.y = 98 - len(self.columns[end]) * 2.2
             self.columns[end].append(checker_idx)
         elif len(self.columns[end]) == 0:
             if end <= 5:
-                checker.x = 5.75 + 47.5 * end
+                checker.x = 9.2 + 6.67 * end
                 checker.y = 0
             elif end <= 11:
-                checker.x = 5.75 + 47.5 * end + 20
+                checker.x = 9.2 + 6.67 * end + 2.98
                 checker.y = 0
             elif end <= 17:
-                checker.x = 548.25 - 47.5 * (end % 12)
-                checker.y = 424
+                checker.x = 85.55 - 6.67 * (end % 12)
+                checker.y = 92
             elif end <= 23:
-                checker.x = 548.25 - 47.5 * (end % 12) - 20
-                checker.y = 424
+                checker.x = 85.55 - 6.67 * (end % 12) - 2.98
+                checker.y = 92
             self.columns[end].append(checker_idx)
         elif (self.checkers[self.columns[end][0]].id <= 14 and checker.id <= 14) or (
             self.checkers[self.columns[end][0]].id >= 15 and checker.id >= 15
         ):
             if end <= 5:
-                checker.x = 5.75 + 47.5 * end
-                checker.y = len(self.columns[end]) * 36
+                checker.x = 9.2 + 6.67 * end
+                checker.y = len(self.columns[end]) * 8
             elif end <= 11:
-                checker.x = 5.75 + 47.5 * end + 20
-                checker.y = len(self.columns[end]) * 36
+                checker.x = 9.2 + 6.67 * end + 2.98
+                checker.y = len(self.columns[end]) * 8
             elif end <= 17:
-                checker.x = 548.25 - 47.5 * (end % 12)
-                checker.y = 424 - len(self.columns[end]) * 36
+                checker.x = 85.55 - 6.67 * (end % 12)
+                checker.y = 92 - len(self.columns[end]) * 8
             elif end <= 23:
-                checker.x = 548.25 - 47.5 * (end % 12) - 20
-                checker.y = 424 - len(self.columns[end]) * 36
+                checker.x = 85.55 - 6.67 * (end % 12) - 2.98
+                checker.y = 92 - len(self.columns[end]) * 8
             self.columns[end].append(checker_idx)
         elif self.checkers[self.columns[end][0]].id <= 14 and checker.id >= 15:
             dead_checker_idx = self.columns[end].pop()
             if end <= 5:
-                checker.x = 5.75 + 47.5 * end
+                checker.x = 9.2 + 6.67 * end
                 checker.y = 0
-                self.checkers[dead_checker_idx].x = -52.5
+                self.checkers[dead_checker_idx].x = 94.1
                 self.checkers[dead_checker_idx].y = (
-                    250 + 40 * self.players[1].num_dead_pieces
+                    45 + 10 * self.players[1].num_dead_pieces
                 )
             elif end <= 11:
-                checker.x = 5.75 + 47.5 * end + 20
+                checker.x = 9.2 + 6.67 * end + 2.98
                 checker.y = 0
-                self.checkers[dead_checker_idx].x = -52.5
+                self.checkers[dead_checker_idx].x = 94.1
                 self.checkers[dead_checker_idx].y = (
-                    250 + 40 * self.players[1].num_dead_pieces
+                    45 + 10 * self.players[1].num_dead_pieces
                 )
             elif end <= 17:
-                checker.x = 548.25 - 47.5 * (end % 12)
-                checker.y = 424
-                self.checkers[dead_checker_idx].x = -52.5
+                checker.x = 85.55 - 6.67 * (end % 12)
+                checker.y = 92
+                self.checkers[dead_checker_idx].x = 94.1
                 self.checkers[dead_checker_idx].y = (
-                    250 + 40 * self.players[1].num_dead_pieces
+                    45 + 10 * self.players[1].num_dead_pieces
                 )
             elif end <= 23:
-                checker.x = 548.25 - 47.5 * (end % 12) - 20
-                checker.y = 424
-                self.checkers[dead_checker_idx].x = -52.5
+                checker.x = 85.55 - 6.67 * (end % 12) - 2.98
+                checker.y = 92
+                self.checkers[dead_checker_idx].x = 94.1
                 self.checkers[dead_checker_idx].y = (
-                    250 + 40 * self.players[1].num_dead_pieces
+                    45 + 10 * self.players[1].num_dead_pieces
                 )
             self.columns[25].append(dead_checker_idx)
             self.columns[end].append(checker_idx)
         elif self.checkers[self.columns[end][0]].id >= 15 and checker.id <= 14:
             dead_checker_idx = self.columns[end].pop()
             if end <= 5:
-                checker.x = 5.75 + 47.5 * end
+                checker.x = 9.2 + 6.67 * end
                 checker.y = 0
-                self.checkers[dead_checker_idx].x = -52.5
+                self.checkers[dead_checker_idx].x = 94.1
                 self.checkers[dead_checker_idx].y = (
-                    210 - 40 * self.players[0].num_dead_pieces
+                    45 - 10 * self.players[0].num_dead_pieces
                 )
             elif end <= 11:
-                checker.x = 5.75 + 47.5 * end + 20
+                checker.x = 9.2 + 6.67 * end + 2.98
                 checker.y = 0
-                self.checkers[dead_checker_idx].x = -52.5
+                self.checkers[dead_checker_idx].x = 94.1
                 self.checkers[dead_checker_idx].y = (
-                    210 - 40 * self.players[0].num_dead_pieces
+                    45 - 10 * self.players[0].num_dead_pieces
                 )
             elif end <= 17:
-                checker.x = 548.25 - 47.5 * (end % 12)
-                checker.y = 424
-                self.checkers[dead_checker_idx].x = -52.5
+                checker.x = 85.55 - 6.67 * (end % 12)
+                checker.y = 92
+                self.checkers[dead_checker_idx].x = 94.1
                 self.checkers[dead_checker_idx].y = (
-                    210 - 40 * self.players[0].num_dead_pieces
+                    45 - 10 * self.players[0].num_dead_pieces
                 )
             elif end <= 23:
-                checker.x = 548.25 - 47.5 * (end % 12) - 20
-                checker.y = 424
-                self.checkers[dead_checker_idx].x = -52.5
+                checker.x = 85.55 - 6.67 * (end % 12) - 2.98
+                checker.y = 92
+                self.checkers[dead_checker_idx].x = 94.1
                 self.checkers[dead_checker_idx].y = (
-                    210 - 40 * self.players[0].num_dead_pieces
+                    45 - 10 * self.players[0].num_dead_pieces
                 )
             self.columns[24].append(dead_checker_idx)
             self.columns[end].append(checker_idx)
@@ -762,36 +763,36 @@ class Backgammon:
         self.determine_first_turn()
         self.message = ""
         self.checkers = [
-            Checker(0, 5.75, 0),
-            Checker(1, 5.75, 36),
-            Checker(2, 548.25, 0),
-            Checker(3, 548.25, 36),
-            Checker(4, 548.25, 72),
-            Checker(5, 548.25, 108),
-            Checker(6, 548.25, 144),
-            Checker(7, 358.25, 424),
-            Checker(8, 358.25, 388),
-            Checker(9, 358.25, 352),
-            Checker(10, 242.25, 424),
-            Checker(11, 242.25, 388),
-            Checker(12, 242.25, 352),
-            Checker(13, 242.25, 316),
-            Checker(14, 242.25, 280),
-            Checker(15, 5.25, 424),
-            Checker(16, 5.25, 388),
-            Checker(17, 548.25, 424),
-            Checker(18, 548.25, 388),
-            Checker(19, 548.25, 352),
-            Checker(20, 548.25, 316),
-            Checker(21, 548.25, 280),
-            Checker(22, 358.25, 0),
-            Checker(23, 358.25, 36),
-            Checker(24, 358.25, 72),
-            Checker(25, 242.25, 0),
-            Checker(26, 242.25, 36),
-            Checker(27, 242.25, 72),
-            Checker(28, 242.25, 108),
-            Checker(29, 242.25, 144),
+            Checker(0, 9.2, 0),
+            Checker(1, 9.2, 8),
+            Checker(2, 85.55, 0),
+            Checker(3, 85.55, 8),
+            Checker(4, 85.55, 16),
+            Checker(5, 85.55, 24),
+            Checker(6, 85.55, 32),
+            Checker(7, 58.87, 92),
+            Checker(8, 58.87, 84),
+            Checker(9, 58.87, 76),
+            Checker(10, 42.55, 92),
+            Checker(11, 42.55, 84),
+            Checker(12, 42.55, 76),
+            Checker(13, 42.55, 68),
+            Checker(14, 42.55, 60),
+            Checker(15, 9.2, 92),
+            Checker(16, 9.2, 84),
+            Checker(17, 85.55, 92),
+            Checker(18, 85.55, 84),
+            Checker(19, 85.55, 76),
+            Checker(20, 85.55, 68),
+            Checker(21, 85.55, 60),
+            Checker(22, 58.87, 0),
+            Checker(23, 58.87, 8),
+            Checker(24, 58.87, 16),
+            Checker(25, 42.55, 0),
+            Checker(26, 42.55, 8),
+            Checker(27, 42.55, 16),
+            Checker(28, 42.55, 24),
+            Checker(29, 42.55, 32),
         ]
         self.columns = {
             0: [0, 1],

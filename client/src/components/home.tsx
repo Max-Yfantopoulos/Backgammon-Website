@@ -89,7 +89,7 @@ function Home() {
   return (
     <div className="container">
       <div className="welcome">Welcome To Maxgammon!</div>
-      <div className={`name-input-container name-input-container-1 ${shakingName["first-name-input"] ? "shake" : ""}`}>
+      <div className={`name-input-container name-input-container-1 ${shakingName["first-name-input"] ? "shake-home" : ""}`}>
         <label htmlFor="name1">Player 1: </label>
         <input
           className="name-input"
@@ -100,7 +100,7 @@ function Home() {
           placeholder="Type your name"
         />
       </div>
-      <div className={`name-input-container name-input-container-2 ${shakingName["second-name-input"] ? "shake" : ""}`}>
+      <div className={`name-input-container name-input-container-2 ${shakingName["second-name-input"] ? "shake-home" : ""}`}>
         <label htmlFor="name2">Player 2: </label>
         <input
           className="name-input"
