@@ -8,12 +8,22 @@ function Home() {
   const navigate = useNavigate();
 
   const [names, setNames] = useState({ name1: "", name2: "" });
+  const [shakingName, setShakingName] = useState<{ [key: string]: boolean }>({});
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
     setNames((prevState) => ({
       ...prevState,
       [id]: value,
     }));
+  };
+
+  const triggerShake = (buttonId: string) => {
+    setShakingName((prev) => ({ ...prev, [buttonId]: true }));
+    setTimeout(() => {
+      setShakingName((prev) => ({ ...prev, [buttonId]: false }));
+    }
+    , 1950);
   };
 
   const handleClick = async (position: number) => {
@@ -39,6 +49,8 @@ function Home() {
       } catch (error) {
         console.error("Error rolling:", error);
       }
+    } else if (position == 0 && !names.name1) {
+      triggerShake("first-name-input");
     } else if (position == 1 && names.name1 && names.name2) {
       try {
         console.log(
@@ -64,13 +76,20 @@ function Home() {
       } catch (error) {
         console.error("Error rolling:", error);
       }
+    } else if (position == 1 && !names.name1 && names.name2) {
+      triggerShake("first-name-input");
+    } else if (position == 1 && names.name1 && !names.name2) {
+      triggerShake("second-name-input");
+    } else if (position == 1 && !names.name1 && !names.name2) {
+      triggerShake("first-name-input");
+      triggerShake("second-name-input");
     }
   };
 
   return (
     <div className="container">
       <div className="welcome">Welcome To Maxgammon!</div>
-      <div className="name-input-container name-input-container-1">
+      <div className={`name-input-container name-input-container-1 ${shakingName["first-name-input"] ? "shake" : ""}`}>
         <label htmlFor="name1">Player 1: </label>
         <input
           className="name-input"
@@ -81,7 +100,7 @@ function Home() {
           placeholder="Type your name"
         />
       </div>
-      <div className="name-input-container name-input-container-2">
+      <div className={`name-input-container name-input-container-2 ${shakingName["second-name-input"] ? "shake" : ""}`}>
         <label htmlFor="name2">Player 2: </label>
         <input
           className="name-input"

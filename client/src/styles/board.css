@@ -615,3 +615,34 @@ body {
     height 1s ease-in-out;
   z-index: 1;
 }
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+    background-color: white;
+  }
+  25% {
+    transform: translateX(-5px);
+    background-color: #f8d7da;
+  }
+  50% {
+    transform: translateX(5px);
+    background-color: #f8d7da;
+  }
+  75% {
+    transform: translateX(-5px);
+    background-color: #f8d7da;
+  }
+  100% {
+    transform: translateX(0);
+    background-color: white;
+  }
+}
+
+.shake {
+  animation: shake 0.65s ease infinite;
+}
+
+.shake:hover {
+  background-color: black !important;
+}

@@ -23,10 +23,7 @@ function BackgammonBoard() {
   const [currentLocations, setCurrentLocations] = useState<
     Record<number, CheckerLocation>
   >({});
-
-  useEffect(() => {
-    console.log("Updated State:", currentLocations);
-  }, [currentLocations]);
+  const [shakingButtons, setShakingButtons] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     if (currentDice.length > 0 && currentTurn != "AI") {
@@ -55,14 +52,15 @@ function BackgammonBoard() {
 
   useEffect(() => {
     const handleTurn = async () => {
-      if (currentTurn === "AI") {
+      if (currentTurn !== "AI") {
+        triggerShake("dicebutton");
+      } else if (currentTurn === "AI") {
         if (currentDice.length === 0) {
           await rollDice();
         }
         await fetchAIPlay();
       }
     };
-
     handleTurn();
   }, [currentTurn]);
 
@@ -109,6 +107,9 @@ function BackgammonBoard() {
           setPreviousPosition(null);
           setCurrentDice(data.rolls);
           setCurrentLocations(data.checkers_location);
+          if (data.rolls.length === 0) {
+            triggerShake("donebutton");
+          }
         }
       } catch (error) {
         console.error("Error making move:", error);
@@ -137,14 +138,24 @@ function BackgammonBoard() {
         console.error("Error fetching possible moves:", error);
       }
     } else if (position == -10) {
+      stopShake("dicebutton");
       rollDice();
     } else if (position == -2) {
       undo();
     } else if (position == -4) {
       redo();
     } else if (position == -5) {
+      stopShake("donebutton");
       changeTurn();
     }
+  };
+
+  const triggerShake = (buttonId: string) => {
+    setShakingButtons((prev) => ({ ...prev, [buttonId]: true }));
+  };
+
+  const stopShake = (buttonId: string) => {
+    setShakingButtons((prev) => ({ ...prev, [buttonId]: false }));
   };
 
   const fetchGameState = async () => {
@@ -188,6 +199,7 @@ function BackgammonBoard() {
       if (data.message === "No Possible Move!") {
         setCurrentTurn(data.current_turn);
         setCurrentDice(data.rolls);
+        triggerShake("donebutton");
         console.log("No possible moves, switching turn to:", data.current_turn);
       }
     } catch (error) {
@@ -281,6 +293,9 @@ function BackgammonBoard() {
         },
       });
       const data = await response.json();
+      if (currentDice.length === 0 && data.rolls.length > 0) {
+        stopShake("donebutton");
+      }
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
       setCurrentDice(data.rolls);
@@ -302,6 +317,9 @@ function BackgammonBoard() {
         },
       });
       const data = await response.json();
+      if (currentDice.length === 1 && data.rolls.length === 0) {
+        triggerShake("donebutton");
+      }
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
       setCurrentDice(data.rolls);
@@ -405,10 +423,10 @@ function BackgammonBoard() {
         <button className="redo-button" onClick={() => handleClick(-4)}>
           ⟳
         </button>
-        <button className="dice" onClick={() => handleClick(-10)}>
+        <button className={`dice ${shakingButtons["dicebutton"] ? "shake" : ""}`} onClick={() => handleClick(-10)}>
           Press To Roll!
         </button>
-        <button className="next-turn" onClick={() => handleClick(-5)}>
+        <button className={`next-turn ${shakingButtons["donebutton"] ? "shake" : ""}`} onClick={() => handleClick(-5)}>
           Done
         </button>
       </div>
