@@ -7,6 +7,8 @@ import uuid
 import cProfile
 import pstats
 
+#starting to work on online multiplayer
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:5174", "https://maxgammon.xyz"]}}, supports_credentials=True)
 
