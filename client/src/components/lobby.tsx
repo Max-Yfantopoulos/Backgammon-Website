@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import "../styles/lobby.css";
@@ -9,6 +9,7 @@ function OnlineGame() {
   const navigate = useNavigate();
   const location = useLocation();
   const name = location.state?.name;
+  const [createdCode, setCreatedCode] = useState("");
   const [code, setCode] = useState("");
   const [shakingName, setShakingName] = useState<{ [key: string]: boolean }>(
     {}
@@ -25,6 +26,19 @@ function OnlineGame() {
     }, 1950);
   };
 
+  useEffect(() => {
+    console.log("Listening for game_ready event...");
+    socket.on("game_ready", (data) => {
+      console.log("Game is ready:", data);
+      navigate("/online", { state: { gameId: data.game_id } });
+    });
+
+    return () => {
+      console.log("Cleaning up game_ready listener...");
+      socket.off("game_ready");
+    };
+  }, []);
+
   const handleClick = async (position: number) => {
     console.log("You clicked on box:", position);
     if (position == -1) {
@@ -33,7 +47,13 @@ function OnlineGame() {
       socket.emit("create_lobby", { name1: "Player1" });
       socket.on("lobby_created", (data) => {
         console.log("Lobby created with game ID:", data.game_id);
-        navigate("/waiting", { state: { gameId: data.game_id } });
+        setCreatedCode(data.game_id);
+        const waiting = document.getElementById("waiting");
+        if (waiting) {
+          waiting.style.display = "block";
+        } else {
+          console.error("Element with ID 'waiting' not found.");
+        }
       });
     } else if (position == 1 && code) {
       console.log("doing this");
@@ -52,6 +72,13 @@ function OnlineGame() {
 
   return (
     <div className="container">
+      <div className="waiting" id="waiting">
+        <button className="home" onClick={() => handleClick(-1)}>
+          ↵
+        </button>
+        <p>Waiting for your friend to join the lobby!</p>
+        <p>The game code is: {createdCode}</p>
+      </div>
       <button className="home" onClick={() => handleClick(-1)}>
         ↵
       </button>
