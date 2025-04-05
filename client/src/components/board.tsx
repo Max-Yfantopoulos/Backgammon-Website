@@ -525,7 +525,7 @@ function BackgammonBoard() {
         </div>
         <div
           className={`piece_black ${
-            currentLocations[0]?.x === 0.65 ? "at_home" : ""
+            currentLocations[0]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[0]?.x || 0}%`,
@@ -534,7 +534,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[1]?.x === 0.65 ? "at_home" : ""
+            currentLocations[1]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[1]?.x || 0}%`,
@@ -543,7 +543,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[2]?.x === 0.65 ? "at_home" : ""
+            currentLocations[2]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[2]?.x || 0}%`,
@@ -552,7 +552,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[3]?.x === 0.65 ? "at_home" : ""
+            currentLocations[3]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[3]?.x || 0}%`,
@@ -561,7 +561,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[4]?.x === 0.65 ? "at_home" : ""
+            currentLocations[4]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[4]?.x || 0}%`,
@@ -570,7 +570,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[5]?.x === 0.65 ? "at_home" : ""
+            currentLocations[5]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[5]?.x || 0}%`,
@@ -579,7 +579,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[6]?.x === 0.65 ? "at_home" : ""
+            currentLocations[6]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[6]?.x || 0}%`,
@@ -588,7 +588,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[7]?.x === 0.65 ? "at_home" : ""
+            currentLocations[7]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[7]?.x || 0}%`,
@@ -597,7 +597,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[8]?.x === 0.65 ? "at_home" : ""
+            currentLocations[8]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[8]?.x || 0}%`,
@@ -606,7 +606,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[9]?.x === 0.65 ? "at_home" : ""
+            currentLocations[9]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[9]?.x || 0}%`,
@@ -615,7 +615,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[10]?.x === 0.65 ? "at_home" : ""
+            currentLocations[10]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[10]?.x || 0}%`,
@@ -624,7 +624,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[11]?.x === 0.65 ? "at_home" : ""
+            currentLocations[11]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[11]?.x || 0}%`,
@@ -633,7 +633,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[12]?.x === 0.65 ? "at_home" : ""
+            currentLocations[12]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[12]?.x || 0}%`,
@@ -642,7 +642,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[13]?.x === 0.65 ? "at_home" : ""
+            currentLocations[13]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[13]?.x || 0}%`,
@@ -651,7 +651,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_black ${
-            currentLocations[14]?.x === 0.65 ? "at_home" : ""
+            currentLocations[14]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[14]?.x || 0}%`,
@@ -661,7 +661,7 @@ function BackgammonBoard() {
 
         <div
           className={`piece_white ${
-            currentLocations[15]?.x === 0.65 ? "at_home" : ""
+            currentLocations[15]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[15]?.x || 0}%`,
@@ -670,7 +670,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[16]?.x === 0.65 ? "at_home" : ""
+            currentLocations[16]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[16]?.x || 0}%`,
@@ -679,7 +679,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[17]?.x === 0.65 ? "at_home" : ""
+            currentLocations[17]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[17]?.x || 0}%`,
@@ -688,7 +688,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[18]?.x === 0.65 ? "at_home" : ""
+            currentLocations[18]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[18]?.x || 0}%`,
@@ -697,7 +697,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[19]?.x === 0.65 ? "at_home" : ""
+            currentLocations[19]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[19]?.x || 0}%`,
@@ -706,7 +706,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[20]?.x === 0.65 ? "at_home" : ""
+            currentLocations[20]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[20]?.x || 0}%`,
@@ -715,7 +715,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[21]?.x === 0.65 ? "at_home" : ""
+            currentLocations[21]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[21]?.x || 0}%`,
@@ -724,7 +724,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[22]?.x === 0.65 ? "at_home" : ""
+            currentLocations[22]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[22]?.x || 0}%`,
@@ -733,7 +733,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[23]?.x === 0.65 ? "at_home" : ""
+            currentLocations[23]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[23]?.x || 0}%`,
@@ -742,7 +742,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[24]?.x === 0.65 ? "at_home" : ""
+            currentLocations[24]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[24]?.x || 0}%`,
@@ -751,7 +751,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[25]?.x === 0.65 ? "at_home" : ""
+            currentLocations[25]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[25]?.x || 0}%`,
@@ -760,7 +760,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[26]?.x === 0.65 ? "at_home" : ""
+            currentLocations[26]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[26]?.x || 0}%`,
@@ -769,7 +769,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[27]?.x === 0.65 ? "at_home" : ""
+            currentLocations[27]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[27]?.x || 0}%`,
@@ -778,7 +778,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[28]?.x === 0.65 ? "at_home" : ""
+            currentLocations[28]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[28]?.x || 0}%`,
@@ -787,7 +787,7 @@ function BackgammonBoard() {
         ></div>
         <div
           className={`piece_white ${
-            currentLocations[29]?.x === 0.65 ? "at_home" : ""
+            currentLocations[29]?.x === 0 ? "at_home" : ""
           }`}
           style={{
             left: `${currentLocations[29]?.x || 0}%`,

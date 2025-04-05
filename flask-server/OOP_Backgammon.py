@@ -362,12 +362,12 @@ class Backgammon:
         checker = self.checkers[checker_idx]
 
         if end == 26:
-            checker.x = 0.65
-            checker.y = len(self.columns[end]) * 11
+            checker.x = 0
+            checker.y = len(self.columns[end]) * 2.2
             self.columns[end].append(checker_idx)
         elif end == 27:
-            checker.x = 0.65
-            checker.y = 450 - len(self.columns[end]) * 11
+            checker.x = 0
+            checker.y = 98 - len(self.columns[end]) * 2.2
             self.columns[end].append(checker_idx)
         elif len(self.columns[end]) == 0:
             if end <= 5:
@@ -770,24 +770,24 @@ class Backgammon:
             Checker(4, 85.55, 16),
             Checker(5, 85.55, 24),
             Checker(6, 85.55, 32),
-            Checker(7, 358.25, 92),
-            Checker(8, 358.25, 84),
-            Checker(9, 358.25, 76),
+            Checker(7, 58.87, 92),
+            Checker(8, 58.87, 84),
+            Checker(9, 58.87, 76),
             Checker(10, 42.55, 92),
             Checker(11, 42.55, 84),
             Checker(12, 42.55, 76),
             Checker(13, 42.55, 68),
             Checker(14, 42.55, 60),
-            Checker(15, 5.25, 92),
-            Checker(16, 5.25, 84),
+            Checker(15, 9.2, 92),
+            Checker(16, 9.2, 84),
             Checker(17, 85.55, 92),
             Checker(18, 85.55, 84),
             Checker(19, 85.55, 76),
             Checker(20, 85.55, 68),
             Checker(21, 85.55, 60),
-            Checker(22, 358.25, 0),
-            Checker(23, 358.25, 8),
-            Checker(24, 358.25, 16),
+            Checker(22, 58.87, 0),
+            Checker(23, 58.87, 8),
+            Checker(24, 58.87, 16),
             Checker(25, 42.55, 0),
             Checker(26, 42.55, 8),
             Checker(27, 42.55, 16),
