@@ -397,25 +397,419 @@ function BackgammonBoard() {
 
   return (
     <div className="container">
-      <h1>Maxgammon Game</h1>
-      <div className="popup" id="popup">
-        <p>Congrats {currentTurn} you won the game!</p>
-        <button
-          className="backarrow-button popup-back"
-          onClick={() => handleClick(-1)}
-        >
-          ↵
-        </button>
-        <button
-          className="backarrow-button restart"
-          onClick={() => handleClick(-3)}
-        >
-          ↻
-        </button>
-      </div>
-      <button className="backarrow-button" onClick={() => handleClick(-1)}>
+      <button className="home" onClick={() => handleClick(-1)}>
         ↵
       </button>
+      <h1>Maxgammon Game</h1>
+      <div className="board">
+        <div className="dead-and-home-box">
+          <div className="position-box-top-dead-and-home"  onClick={() => handleClick(26)}></div>
+          <div className="position-box-bottom-dead-and-home"  onClick={() => handleClick(27)}></div>
+        </div>
+        <div className="left-bar"></div>
+        <div className="left-bin">
+          <div className="top-row">
+            <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(0)}></div>
+              <div className="down-triangle-light-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(1)}></div>
+              <div className="down-triangle-dark-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(2)}></div>
+              <div className="down-triangle-light-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(3)}></div>
+              <div className="down-triangle-dark-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(4)}></div>
+              <div className="down-triangle-light-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(5)}></div>
+              <div className="down-triangle-dark-brown"></div>
+            </div>
+          </div>
+          <div className="bottom-row">
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(23)}></div>
+              <div className="up-triangle-dark-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(22)}></div>
+              <div className="up-triangle-light-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(21)}></div>
+              <div className="up-triangle-dark-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(20)}></div>
+              <div className="up-triangle-light-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(19)}></div>
+              <div className="up-triangle-dark-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(18)}></div>
+              <div className="up-triangle-light-brown"></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="middle-bar"></div>
+
+        <div className="right-bin">
+        <div className="top-row">
+          <div className="triangle-container">
+            <div className="position-box-top" onClick={() => handleClick(6)}></div>
+            <div className="down-triangle-light-brown"></div>
+          </div>
+          <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(7)}></div>
+              <div className="down-triangle-dark-brown"></div>
+          </div>
+          <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(8)}></div>
+              <div className="down-triangle-light-brown"></div>
+          </div>
+          <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(9)}></div>
+              <div className="down-triangle-dark-brown"></div>
+          </div>
+          <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(10)}></div>
+              <div className="down-triangle-light-brown"></div>
+          </div>
+          <div className="triangle-container">
+              <div className="position-box-top" onClick={() => handleClick(11)}></div>
+              <div className="down-triangle-dark-brown"></div>
+          </div>
+        </div>
+          <div className="bottom-row">
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(17)}></div>
+              <div className="up-triangle-dark-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(16)}></div>
+              <div className="up-triangle-light-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(15)}></div>
+              <div className="up-triangle-dark-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(14)}></div>
+              <div className="up-triangle-light-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(13)}></div>
+              <div className="up-triangle-dark-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div className="position-box-bottom" onClick={() => handleClick(12)}></div>
+              <div className="up-triangle-light-brown"></div>
+            </div>
+          </div>
+        </div>
+        <div className="right-bar"></div>
+        <div className="dead-and-home-box">
+          <div className="position-box-top-dead-and-home" onClick={() => handleClick(24)}></div>
+          <div className="position-box-bottom-dead-and-home" onClick={() => handleClick(25)}></div>
+        </div>
+        <div
+          className={`piece_black ${
+            currentLocations[0]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[0]?.x || 0}%`,
+            top: `${currentLocations[0]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[1]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[1]?.x || 0}%`,
+            top: `${currentLocations[1]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[2]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[2]?.x || 0}%`,
+            top: `${currentLocations[2]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[3]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[3]?.x || 0}%`,
+            top: `${currentLocations[3]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[4]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[4]?.x || 0}%`,
+            top: `${currentLocations[4]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[5]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[5]?.x || 0}%`,
+            top: `${currentLocations[5]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[6]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[6]?.x || 0}%`,
+            top: `${currentLocations[6]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[7]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[7]?.x || 0}%`,
+            top: `${currentLocations[7]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[8]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[8]?.x || 0}%`,
+            top: `${currentLocations[8]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[9]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[9]?.x || 0}%`,
+            top: `${currentLocations[9]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[10]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[10]?.x || 0}%`,
+            top: `${currentLocations[10]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[11]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[11]?.x || 0}%`,
+            top: `${currentLocations[11]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[12]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[12]?.x || 0}%`,
+            top: `${currentLocations[12]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[13]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[13]?.x || 0}%`,
+            top: `${currentLocations[13]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_black ${
+            currentLocations[14]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[14]?.x || 0}%`,
+            top: `${currentLocations[14]?.y || 0}%`,
+          }}
+        ></div>
+
+        <div
+          className={`piece_white ${
+            currentLocations[15]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[15]?.x || 0}%`,
+            top: `${currentLocations[15]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[16]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[16]?.x || 0}%`,
+            top: `${currentLocations[16]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[17]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[17]?.x || 0}%`,
+            top: `${currentLocations[17]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[18]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[18]?.x || 0}%`,
+            top: `${currentLocations[18]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[19]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[19]?.x || 0}%`,
+            top: `${currentLocations[19]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[20]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[20]?.x || 0}%`,
+            top: `${currentLocations[20]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[21]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[21]?.x || 0}%`,
+            top: `${currentLocations[21]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[22]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[22]?.x || 0}%`,
+            top: `${currentLocations[22]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[23]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[23]?.x || 0}%`,
+            top: `${currentLocations[23]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[24]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[24]?.x || 0}%`,
+            top: `${currentLocations[24]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[25]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[25]?.x || 0}%`,
+            top: `${currentLocations[25]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[26]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[26]?.x || 0}%`,
+            top: `${currentLocations[26]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[27]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[27]?.x || 0}%`,
+            top: `${currentLocations[27]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[28]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[28]?.x || 0}%`,
+            top: `${currentLocations[28]?.y || 0}%`,
+          }}
+        ></div>
+        <div
+          className={`piece_white ${
+            currentLocations[29]?.x === 0.65 ? "at_home" : ""
+          }`}
+          style={{
+            left: `${currentLocations[29]?.x || 0}%`,
+            top: `${currentLocations[29]?.y || 0}%`,
+          }}
+        ></div>
+        <div className="popup" id="popup">
+          <p className="no-margin">Congrats {currentTurn} you won the game!</p>
+          <button
+            className="popup-home"
+            onClick={() => handleClick(-1)}
+          >
+            ↵
+          </button>
+          <button
+            className="popup-restart"
+           onClick={() => handleClick(-3)}
+          >
+           ↻
+          </button>
+        </div>
+      </div>
       <div className="roll-redo-container">
         <button className="undo-button" onClick={() => handleClick(-2)}>
           ⟲
@@ -430,439 +824,6 @@ function BackgammonBoard() {
           Done
         </button>
       </div>
-      <div className="board">
-        <div className="left-bin">
-          <div className="top-row">
-            <div className="arrow-down odd"></div>
-            <div className="arrow-down even"></div>
-            <div className="arrow-down odd"></div>
-            <div className="arrow-down even"></div>
-            <div className="arrow-down odd"></div>
-            <div className="arrow-down even"></div>
-          </div>
-          <div className="bottom-row">
-            <div className="arrow-up odd"></div>
-            <div className="arrow-up even"></div>
-            <div className="arrow-up odd"></div>
-            <div className="arrow-up even"></div>
-            <div className="arrow-up odd"></div>
-            <div className="arrow-up even"></div>
-          </div>
-        </div>
-
-        <div className="middle-bar"></div>
-
-        <div className="right-bin">
-          <div className="top-row">
-            <div className="arrow-down odd"></div>
-            <div className="arrow-down even"></div>
-            <div className="arrow-down odd"></div>
-            <div className="arrow-down even"></div>
-            <div className="arrow-down odd"></div>
-            <div className="arrow-down even"></div>
-          </div>
-          <div className="bottom-row">
-            <div className="arrow-up odd"></div>
-            <div className="arrow-up even"></div>
-            <div className="arrow-up odd"></div>
-            <div className="arrow-up even"></div>
-            <div className="arrow-up odd"></div>
-            <div className="arrow-up even"></div>
-          </div>
-        </div>
-
-        <div
-          className={`piece_black ${
-            currentLocations[0]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[0]?.x || 0}px`,
-            top: `${currentLocations[0]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[1]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[1]?.x || 0}px`,
-            top: `${currentLocations[1]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[2]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[2]?.x || 0}px`,
-            top: `${currentLocations[2]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[3]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[3]?.x || 0}px`,
-            top: `${currentLocations[3]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[4]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[4]?.x || 0}px`,
-            top: `${currentLocations[4]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[5]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[5]?.x || 0}px`,
-            top: `${currentLocations[5]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[6]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[6]?.x || 0}px`,
-            top: `${currentLocations[6]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[7]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[7]?.x || 0}px`,
-            top: `${currentLocations[7]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[8]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[8]?.x || 0}px`,
-            top: `${currentLocations[8]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[9]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[9]?.x || 0}px`,
-            top: `${currentLocations[9]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[10]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[10]?.x || 0}px`,
-            top: `${currentLocations[10]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[11]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[11]?.x || 0}px`,
-            top: `${currentLocations[11]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[12]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[12]?.x || 0}px`,
-            top: `${currentLocations[12]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[13]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[13]?.x || 0}px`,
-            top: `${currentLocations[13]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_black ${
-            currentLocations[14]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[14]?.x || 0}px`,
-            top: `${currentLocations[14]?.y || 0}px`,
-          }}
-        ></div>
-
-        <div
-          className={`piece_white ${
-            currentLocations[15]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[15]?.x || 0}px`,
-            top: `${currentLocations[15]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[16]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[16]?.x || 0}px`,
-            top: `${currentLocations[16]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[17]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[17]?.x || 0}px`,
-            top: `${currentLocations[17]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[18]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[18]?.x || 0}px`,
-            top: `${currentLocations[18]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[19]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[19]?.x || 0}px`,
-            top: `${currentLocations[19]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[20]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[20]?.x || 0}px`,
-            top: `${currentLocations[20]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[21]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[21]?.x || 0}px`,
-            top: `${currentLocations[21]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[22]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[22]?.x || 0}px`,
-            top: `${currentLocations[22]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[23]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[23]?.x || 0}px`,
-            top: `${currentLocations[23]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[24]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[24]?.x || 0}px`,
-            top: `${currentLocations[24]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[25]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[25]?.x || 0}px`,
-            top: `${currentLocations[25]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[26]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[26]?.x || 0}px`,
-            top: `${currentLocations[26]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[27]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[27]?.x || 0}px`,
-            top: `${currentLocations[27]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[28]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[28]?.x || 0}px`,
-            top: `${currentLocations[28]?.y || 0}px`,
-          }}
-        ></div>
-        <div
-          className={`piece_white ${
-            currentLocations[29]?.x === 601.5 ? "at_home" : ""
-          }`}
-          style={{
-            left: `${currentLocations[29]?.x || 0}px`,
-            top: `${currentLocations[29]?.y || 0}px`,
-          }}
-        ></div>
-
-        <div
-          className="position-box position-box_0"
-          onClick={() => handleClick(0)}
-        ></div>
-        <div
-          className="position-box position-box_1"
-          onClick={() => handleClick(1)}
-        ></div>
-        <div
-          className="position-box position-box_2"
-          onClick={() => handleClick(2)}
-        ></div>
-        <div
-          className="position-box position-box_3"
-          onClick={() => handleClick(3)}
-        ></div>
-        <div
-          className="position-box position-box_4"
-          onClick={() => handleClick(4)}
-        ></div>
-        <div
-          className="position-box position-box_5"
-          onClick={() => handleClick(5)}
-        ></div>
-        <div
-          className="position-box position-box_6"
-          onClick={() => handleClick(6)}
-        ></div>
-        <div
-          className="position-box position-box_7"
-          onClick={() => handleClick(7)}
-        ></div>
-        <div
-          className="position-box position-box_8"
-          onClick={() => handleClick(8)}
-        ></div>
-        <div
-          className="position-box position-box_9"
-          onClick={() => handleClick(9)}
-        ></div>
-        <div
-          className="position-box position-box_10"
-          onClick={() => handleClick(10)}
-        ></div>
-        <div
-          className="position-box position-box_11"
-          onClick={() => handleClick(11)}
-        ></div>
-        <div
-          className="position-box position-box_12"
-          onClick={() => handleClick(12)}
-        ></div>
-        <div
-          className="position-box position-box_13"
-          onClick={() => handleClick(13)}
-        ></div>
-        <div
-          className="position-box position-box_14"
-          onClick={() => handleClick(14)}
-        ></div>
-        <div
-          className="position-box position-box_15"
-          onClick={() => handleClick(15)}
-        ></div>
-        <div
-          className="position-box position-box_16"
-          onClick={() => handleClick(16)}
-        ></div>
-        <div
-          className="position-box position-box_17"
-          onClick={() => handleClick(17)}
-        ></div>
-        <div
-          className="position-box position-box_18"
-          onClick={() => handleClick(18)}
-        ></div>
-        <div
-          className="position-box position-box_19"
-          onClick={() => handleClick(19)}
-        ></div>
-        <div
-          className="position-box position-box_20"
-          onClick={() => handleClick(20)}
-        ></div>
-        <div
-          className="position-box position-box_21"
-          onClick={() => handleClick(21)}
-        ></div>
-        <div
-          className="position-box position-box_22"
-          onClick={() => handleClick(22)}
-        ></div>
-        <div
-          className="position-box position-box_23"
-          onClick={() => handleClick(23)}
-        ></div>
-
-        <div className="dead-box-container">
-          <div
-            className="dead-box dead-box-white"
-            onClick={() => handleClick(24)}
-          ></div>
-          <div
-            className="dead-box dead-box-black"
-            onClick={() => handleClick(25)}
-          ></div>
-        </div>
-
-        <div className="home-box-container">
-          <div
-            className="home-box home-box-white"
-            onClick={() => handleClick(26)}
-          ></div>
-          <div
-            className="home-box home-box-black"
-            onClick={() => handleClick(27)}
-          ></div>
-        </div>
-      </div>
-
       <div className="name-container">
         <div className="turn">Current Turn: {currentTurn}</div>
         <div className="name-checker"
@@ -874,7 +835,7 @@ function BackgammonBoard() {
 
       <div className="rolls">Rolls: {currentDice.toString()}</div>
     </div>
-  );
+  )
 }
 
-export default BackgammonBoard;
+export default BackgammonBoard
