@@ -85,7 +85,7 @@ function Home() {
       triggerShake("first-name-input");
       triggerShake("second-name-input");
     } else if (position == 2 && names.name1) {
-      navigate("/lobby");
+      navigate("/lobby", { state: { name: names.name1 } });
     } else if (position == 2 && !names.name1) {
       triggerShake("first-name-input");
     }

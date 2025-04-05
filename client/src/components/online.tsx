@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 import "../styles/online.css";
 
 const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
+
+const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
 interface CheckerLocation {
   x: number;
@@ -15,6 +18,8 @@ interface ValidMoves {
 
 function OnlineGame() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const gameId = location.state?.gameId;
   const [validMoves, setValidMoves] = useState<ValidMoves>({});
   const [currentTurn, setCurrentTurn] = useState<string>("");
   const [playerColors, setPlayerColors] = useState<Record<string, string>>({});
@@ -28,6 +33,7 @@ function OnlineGame() {
   }>({});
 
   useEffect(() => {
+    console.log("Current gameId:", gameId);
     if (currentDice.length > 0 && currentTurn != "AI") {
       isPossibleMove();
     }
@@ -53,17 +59,7 @@ function OnlineGame() {
   }, []);
 
   useEffect(() => {
-    const handleTurn = async () => {
-      if (currentTurn !== "AI") {
-        triggerShake("dicebutton");
-      } else if (currentTurn === "AI") {
-        if (currentDice.length === 0) {
-          await rollDice();
-        }
-        await fetchAIPlay();
-      }
-    };
-    handleTurn();
+    triggerShake("dicebutton");
   }, [currentTurn]);
 
   const handleClick = async (position: number) => {
@@ -87,22 +83,13 @@ function OnlineGame() {
     console.log("Current Player: ", currentTurn);
     console.log("Current Dice: ", currentDice);
     if (position in validMoves && previousPosition != null) {
-      try {
-        const gameId = sessionStorage.getItem("game_id") || "";
-        const response = await fetch(`${Backend_Url}/api/make_move`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Game-ID": gameId,
-          },
-          body: JSON.stringify({
-            previousPosition,
-            position,
-          }),
-        });
+      socket.emit("make_move", {
+        game_id: gameId,
+        previous_position: previousPosition,
+        position,
+      });
 
-        const data = await response.json();
-
+      socket.on("move_made", (data) => {
         if (data.message) {
           console.log(data.message);
           setCurrentTurn(data.current_turn);
@@ -113,22 +100,15 @@ function OnlineGame() {
             triggerShake("donebutton");
           }
         }
-      } catch (error) {
-        console.error("Error making move:", error);
-      }
-    } else if (position >= 0 && position <= 27) {
-      try {
-        const gameId = sessionStorage.getItem("game_id") || "";
-        const response = await fetch(`${Backend_Url}/api/pick_start`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Game-ID": gameId,
-          },
-          body: JSON.stringify({ position }),
-        });
+      });
 
-        const data = await response.json();
+      socket.on("error", (error) => {
+        console.error("Error making move:", error.message);
+      });
+    } else if (position >= 0 && position <= 27) {
+      socket.emit("pick_start", { game_id: gameId, position });
+
+      socket.on("start_picked", (data) => {
         if (data.message) {
           console.log("Possible moves:", data.message);
           setPreviousPosition(position);
@@ -136,9 +116,11 @@ function OnlineGame() {
         } else {
           console.log("No possible moves available");
         }
-      } catch (error) {
-        console.error("Error fetching possible moves:", error);
-      }
+      });
+
+      socket.on("error", (error) => {
+        console.error("Error fetching possible moves:", error.message);
+      });
     } else if (position == -10) {
       stopShake("dicebutton");
       rollDice();
@@ -160,17 +142,10 @@ function OnlineGame() {
     setShakingButtons((prev) => ({ ...prev, [buttonId]: false }));
   };
 
-  const fetchGameState = async () => {
-    try {
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch(`${Backend_Url}/api/state`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
-      });
-      const data = await response.json();
+  const fetchGameState = () => {
+    socket.emit("fetch_state", { game_id: gameId });
+
+    socket.on("state_fetched", (data) => {
       console.log("Fetched Data:", data);
       if (data.current_turn) {
         setCurrentTurn(data.current_turn);
@@ -182,119 +157,70 @@ function OnlineGame() {
         setCurrentLocations(data.checkers_location);
       }
       console.log("Updated State:", currentLocations);
-    } catch (error) {
-      console.error("Error fetching game state:", error);
-    }
+    });
+
+    socket.on("error", (error) => {
+      console.error("Error fetching game state:", error.message);
+    });
   };
 
-  const isPossibleMove = async () => {
-    try {
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch(`${Backend_Url}/api/is_possible_move`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
-      });
-      const data = await response.json();
+  const isPossibleMove = () => {
+    socket.emit("is_possible_move", { game_id: gameId });
+    socket.on("possible_move_checked", (data) => {
       if (data.message === "No Possible Move!") {
         setCurrentTurn(data.current_turn);
         setCurrentDice(data.rolls);
         triggerShake("donebutton");
         console.log("No possible moves, switching turn to:", data.current_turn);
       }
-    } catch (error) {
-      console.error("Error checking if there is a possible move:", error);
-    }
+    });
+    socket.on("error", (error) => {
+      console.error(
+        "Error checking if there is a possible move:",
+        error.message
+      );
+    });
   };
 
-  const rollDice = async () => {
+  const rollDice = () => {
     console.log("You rolled the dice.");
-    try {
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch(`${Backend_Url}/api/roll_dice`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
-      });
+    socket.emit("roll_dice", { game_id: gameId });
 
-      const data = await response.json();
-
+    socket.on("dice_rolled", (data) => {
       if (data.message) {
         setCurrentDice(data.rolls);
       } else {
         console.log("Unexpected Error");
       }
-    } catch (error) {
-      console.error("Error rolling:", error);
-    }
-  };
+    });
 
-  const fetchAIPlay = async () => {
-    try {
-      console.log("play");
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const aiResponse = await fetch(`${Backend_Url}/api/ai_play`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
-      });
-      console.log("done playing");
-
-      const aiData = await aiResponse.json();
-      console.log("hi");
-
-      if (aiData.message) {
-        console.log(aiData.message);
-        setCurrentTurn(aiData.current_turn);
-        setPreviousPosition(null);
-        setCurrentDice(aiData.rolls);
-        setValidMoves({});
-        setCurrentLocations(aiData.checkers_location);
-      } else {
-        console.log("Unexpected Error");
-      }
-    } catch (error) {
-      console.error("Error making AI move:", error);
-    }
+    socket.on("error", (error) => {
+      console.error("Error rolling dice:", error.message);
+    });
   };
 
   const checkWinner = async () => {
-    try {
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch(`${Backend_Url}/api/check_winner`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
+    socket.emit("check_winner", { game_id: gameId });
+
+    return new Promise((resolve) => {
+      socket.on("winner_checked", (data) => {
+        if (data.message === "Winner!") {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
       });
-      const data = await response.json();
-      if (data.message == "Winner!") {
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("Error checking if there is a winner:", error);
-    }
+      socket.on("error", (error) => {
+        console.error("Error checking winner:", error.message);
+        resolve(false);
+      });
+    });
   };
 
   const undo = async () => {
-    try {
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch(`${Backend_Url}/api/undo`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
-      });
-      const data = await response.json();
+    socket.emit("undo", { game_id: gameId });
+
+    socket.on("undo_done", (data) => {
       if (currentDice.length === 0 && data.rolls.length > 0) {
         stopShake("donebutton");
       }
@@ -303,22 +229,17 @@ function OnlineGame() {
       setCurrentDice(data.rolls);
       setValidMoves({});
       setCurrentLocations(data.checkers_location);
-    } catch (error) {
-      console.error("Error checking if there is a winner:", error);
-    }
+    });
+
+    socket.on("error", (error) => {
+      console.error("Error undoing move:", error.message);
+    });
   };
 
   const redo = async () => {
-    try {
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch(`${Backend_Url}/api/redo`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
-      });
-      const data = await response.json();
+    socket.emit("redo", { game_id: gameId });
+
+    socket.on("redo_done", (data) => {
       if (currentDice.length === 1 && data.rolls.length === 0) {
         triggerShake("donebutton");
       }
@@ -327,61 +248,45 @@ function OnlineGame() {
       setCurrentDice(data.rolls);
       setValidMoves({});
       setCurrentLocations(data.checkers_location);
-    } catch (error) {
-      console.error("Error checking if there is a winner:", error);
-    }
+    });
+
+    socket.on("error", (error) => {
+      console.error("Error redoing move:", error.message);
+    });
   };
 
-  const changeTurn = async () => {
-    try {
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch(`${Backend_Url}/api/change_turn`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
-      });
-      const data = await response.json();
+  const changeTurn = () => {
+    socket.emit("change_turn", { game_id: gameId });
+    socket.on("turn_changed", (data) => {
       setCurrentTurn(data.current_turn);
-    } catch (error) {
-      console.error("Error checking if there is a winner:", error);
-    }
+      console.log("Turn changed to:", data.current_turn);
+    });
+    socket.on("error", (error) => {
+      console.error("Error changing turn:", error.message);
+    });
   };
 
   const restartGame = async () => {
-    try {
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch(`${Backend_Url}/api/restart_game`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
-      });
-      const data = await response.json();
+    socket.emit("restart_game", { game_id: gameId });
+
+    socket.on("game_restarted", (data) => {
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
       setCurrentDice(data.rolls);
       setValidMoves({});
       setCurrentLocations(data.checkers_location);
-    } catch (error) {
-      console.error("Error restarting game:", error);
-    }
+    });
+
+    socket.on("error", (error) => {
+      console.error("Error restarting game:", error.message);
+    });
   };
 
   const fetchColor = async () => {
-    try {
-      const gameId = sessionStorage.getItem("game_id") || "";
-      const response = await fetch(`${Backend_Url}/api/fetch_color`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Game-ID": gameId,
-        },
-      });
-      const data = await response.json();
-      if (data.current_color == "black") {
+    socket.emit("fetch_color", { game_id: gameId });
+
+    socket.on("color_fetched", (data) => {
+      if (data.current_color === "black") {
         setPlayerColors({
           [data.current_turn]: "#696969",
           [data.other_turn]: "#ffffff",
@@ -392,9 +297,11 @@ function OnlineGame() {
           [data.other_turn]: "#696969",
         });
       }
-    } catch (error) {
-      console.error("Error checking if there is a winner:", error);
-    }
+    });
+
+    socket.on("error", (error) => {
+      console.error("Error fetching colors:", error.message);
+    });
   };
 
   return (

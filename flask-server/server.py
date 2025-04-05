@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request, session
 from flask_cors import CORS
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, join_room, leave_room, rooms
 from OOP_Backgammon import Backgammon, Dice, Board
 import sqlite3
-import uuid
+import random
+import string
+import json
 import cProfile
 import pstats
 
@@ -19,6 +21,11 @@ socketio = SocketIO(
     cors_allowed_origins=["http://localhost:5174", "https://maxgammon.xyz"],
     supports_credentials=True,
 )
+
+
+def generate_game_code(length=6):
+    return "".join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
 
 # Database Functions
 
@@ -254,7 +261,7 @@ def startvsAI():
     player_name = data.get("name")
     if not player_name:
         return jsonify({"error": "Missing 'name' field"}), 400
-    game_id = str(uuid.uuid4())
+    game_id = generate_game_code()
     game = Backgammon(name1="AI", name2=player_name, AI1="Monte", AI2="User")
     save_game(game_id, game.to_json())
     return jsonify({"message": "Game started", "game_id": game_id}), 200
@@ -269,7 +276,7 @@ def startvsUser():
     player_two_name = data.get("name2")
     if not player_one_name or not player_two_name:
         return jsonify({"error": "Missing 'name' field"}), 400
-    game_id = str(uuid.uuid4())
+    game_id = generate_game_code()
     game = Backgammon(
         name1=player_one_name, name2=player_two_name, AI1="User", AI2="User"
     )
@@ -412,13 +419,238 @@ def fetch_color():
 # WebSocket Functions
 
 
+@socketio.on("create_lobby")
+def handle_create_game(data):
+    player_one_name = data.get("name1")
+    if not player_one_name:
+        socketio.emit("error", {"message": "Missing player names"})
+        return
+    game_id = generate_game_code()
+    join_room(game_id)
+    save_game(game_id, json.dumps({"player_one": player_one_name, "player_two": None}))
+    socketio.emit(
+        "lobby_created",
+        {"game_id": game_id, "message": "Lobby created"},
+        to=request.sid,
+    )
+
+
 @socketio.on("join_game")
 def handle_join_game(data):
     game_id = data.get("game_id")
+    print(game_id)
     player_name = data.get("player_name")
-    print(f"Player {player_name} joined game {game_id}")
-    # Broadcast to other players in the game
-    socketio.emit("player_joined", {"game_id": game_id, "player_name": player_name})
+    if not game_id or not player_name:
+        socketio.emit("error", {"message": "Missing game ID or player name"})
+        return
+    game_data = load_game(game_id)
+    if not game_data:
+        socketio.emit("error", {"message": "Game not found"})
+        return
+    game = json.loads(game_data)
+    print(game)
+    if game["player_two"] is not None:
+        socketio.emit("error", {"message": "Game is already full"})
+        return
+    game["player_two"] = player_name
+    save_game(game_id, game_data)
+    join_room(game_id)
+    print(f"Client joined room: {game_id}")
+    print(f"Current rooms for client: {rooms(request.sid)}")
+    socketio.emit(
+        "game_ready",
+        {
+            "game_id": game_id,
+            "player_name": game["player_one"],
+            "player_two": game["player_two"],
+        },
+        room=game_id,
+    )
+    print(f"Emitting game_ready to room: {game_id}")
+    print("game_ready emitted")
+    game = Backgammon(
+        name1=game["player_one"],
+        name2=game["player_two"],
+        AI1="User",
+        AI2="User",
+    )
+    save_game(game_id, game.to_json())
+
+
+@socketio.on("fetch_state")
+def handle_fetch_state(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_state(game_id)
+    if status == 200:
+        socketio.emit("state_fetched", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("pick_start")
+def handle_pick_start(data):
+    game_id = data.get("game_id")
+    start = data.get("position")
+
+    if not game_id or start is None:
+        socketio.emit("error", {"message": "Missing game ID or position"})
+        return
+
+    response, status = process_pick_state(game_id, start)
+    if status == 200:
+        socketio.emit("start_picked", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("roll_dice")
+def handle_roll_dice(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_roll_dice(game_id)
+    if status == 200:
+        socketio.emit("dice_rolled", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("make_move")
+def handle_make_move(data):
+    game_id = data.get("game_id")
+    start = data.get("previousPosition")
+    end = data.get("position")
+
+    if not game_id or start is None or end is None:
+        socketio.emit("error", {"message": "Missing game ID or positions"})
+        return
+
+    response, status = process_make_move(game_id, start, end)
+    if status == 200:
+        socketio.emit("move_made", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("is_possible_move")
+def handle_is_possible_move(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_is_possible_move(game_id)
+    if status == 200:
+        socketio.emit("possible_move_checked", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("check_winner")
+def handle_check_winner(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_check_winner(game_id)
+    if status == 200:
+        socketio.emit("winner_checked", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("undo")
+def handle_undo(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_undo(game_id)
+    if status == 200:
+        socketio.emit("undo_done", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("redo")
+def handle_redo(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_redo(game_id)
+    if status == 200:
+        socketio.emit("redo_done", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("change_turn")
+def handle_change_turn(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_change_turn(game_id)
+    if status == 200:
+        socketio.emit("turn_changed", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("restart_game")
+def handle_restart_game(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_restart_game(game_id)
+    if status == 200:
+        socketio.emit("game_restarted", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("fetch_color")
+def handle_fetch_color(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_fetch_color(game_id)
+    if status == 200:
+        socketio.emit("color_fetched", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("disconnect")
+def handle_disconnect():
+    # Handle player disconnection logic here
+    pass
+
+
+@socketio.on("leave_game")
+def handle_leave_game(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    leave_room(game_id)
+    socketio.emit("left_game", {"message": "Left the game"}, room=game_id)
 
 
 if __name__ == "__main__":
