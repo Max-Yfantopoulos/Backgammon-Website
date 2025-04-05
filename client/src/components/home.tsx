@@ -8,7 +8,9 @@ function Home() {
   const navigate = useNavigate();
 
   const [names, setNames] = useState({ name1: "", name2: "" });
-  const [shakingName, setShakingName] = useState<{ [key: string]: boolean }>({});
+  const [shakingName, setShakingName] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
@@ -22,8 +24,7 @@ function Home() {
     setShakingName((prev) => ({ ...prev, [buttonId]: true }));
     setTimeout(() => {
       setShakingName((prev) => ({ ...prev, [buttonId]: false }));
-    }
-    , 1950);
+    }, 1950);
   };
 
   const handleClick = async (position: number) => {
@@ -45,7 +46,7 @@ function Home() {
         const gameId = data.game_id;
         sessionStorage.setItem("game_id", gameId);
         console.log("Sendinsup");
-        navigate("/game");
+        navigate("/local");
       } catch (error) {
         console.error("Error rolling:", error);
       }
@@ -72,7 +73,7 @@ function Home() {
         const gameId = data.game_id;
         sessionStorage.setItem("game_id", gameId);
         console.log("USER GAME!!");
-        navigate("/game");
+        navigate("/local");
       } catch (error) {
         console.error("Error rolling:", error);
       }
@@ -83,13 +84,21 @@ function Home() {
     } else if (position == 1 && !names.name1 && !names.name2) {
       triggerShake("first-name-input");
       triggerShake("second-name-input");
+    } else if (position == 2 && names.name1) {
+      navigate("/lobby");
+    } else if (position == 2 && !names.name1) {
+      triggerShake("first-name-input");
     }
   };
 
   return (
     <div className="container">
-      <div className="welcome">Welcome To Maxgammon!</div>
-      <div className={`name-input-container name-input-container-1 ${shakingName["first-name-input"] ? "shake-home" : ""}`}>
+      <h1>Welcome To Maxgammon!</h1>
+      <div
+        className={`name-input-container ${
+          shakingName["first-name-input"] ? "shake-home" : ""
+        }`}
+      >
         <label htmlFor="name1">Player 1: </label>
         <input
           className="name-input"
@@ -100,7 +109,11 @@ function Home() {
           placeholder="Type your name"
         />
       </div>
-      <div className={`name-input-container name-input-container-2 ${shakingName["second-name-input"] ? "shake-home" : ""}`}>
+      <div
+        className={`name-input-container ${
+          shakingName["second-name-input"] ? "shake-home" : ""
+        }`}
+      >
         <label htmlFor="name2">Player 2: </label>
         <input
           className="name-input"
@@ -112,11 +125,14 @@ function Home() {
         />
       </div>
       <div className="button-container">
-        <button className="AI-button" onClick={() => handleClick(0)}>
+        <button className="home-button" onClick={() => handleClick(0)}>
           Play AI
         </button>
-        <button className="Multiplayer-button" onClick={() => handleClick(1)}>
+        <button className="home-button" onClick={() => handleClick(1)}>
           Play Multiplayer
+        </button>
+        <button className="home-button" onClick={() => handleClick(2)}>
+          Play Online
         </button>
       </div>
     </div>

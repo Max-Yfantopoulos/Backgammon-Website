@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/board.css";
+import "../styles/online.css";
 
 const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
 
@@ -13,7 +13,7 @@ interface ValidMoves {
   [key: number]: boolean;
 }
 
-function BackgammonBoard() {
+function OnlineGame() {
   const navigate = useNavigate();
   const [validMoves, setValidMoves] = useState<ValidMoves>({});
   const [currentTurn, setCurrentTurn] = useState<string>("");
@@ -23,7 +23,9 @@ function BackgammonBoard() {
   const [currentLocations, setCurrentLocations] = useState<
     Record<number, CheckerLocation>
   >({});
-  const [shakingButtons, setShakingButtons] = useState<{ [key: string]: boolean }>({});
+  const [shakingButtons, setShakingButtons] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   useEffect(() => {
     if (currentDice.length > 0 && currentTurn != "AI") {
@@ -403,60 +405,102 @@ function BackgammonBoard() {
       <h1>Maxgammon Game</h1>
       <div className="board">
         <div className="dead-and-home-box">
-          <div className="position-box-top-dead-and-home"  onClick={() => handleClick(26)}></div>
-          <div className="position-box-bottom-dead-and-home"  onClick={() => handleClick(27)}></div>
+          <div
+            className="position-box-top-dead-and-home"
+            onClick={() => handleClick(26)}
+          ></div>
+          <div
+            className="position-box-bottom-dead-and-home"
+            onClick={() => handleClick(27)}
+          ></div>
         </div>
         <div className="left-bar"></div>
         <div className="left-bin">
           <div className="top-row">
             <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(0)}></div>
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(0)}
+              ></div>
               <div className="down-triangle-light-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(1)}></div>
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(1)}
+              ></div>
               <div className="down-triangle-dark-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(2)}></div>
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(2)}
+              ></div>
               <div className="down-triangle-light-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(3)}></div>
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(3)}
+              ></div>
               <div className="down-triangle-dark-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(4)}></div>
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(4)}
+              ></div>
               <div className="down-triangle-light-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(5)}></div>
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(5)}
+              ></div>
               <div className="down-triangle-dark-brown"></div>
             </div>
           </div>
           <div className="bottom-row">
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(23)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(23)}
+              ></div>
               <div className="up-triangle-dark-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(22)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(22)}
+              ></div>
               <div className="up-triangle-light-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(21)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(21)}
+              ></div>
               <div className="up-triangle-dark-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(20)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(20)}
+              ></div>
               <div className="up-triangle-light-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(19)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(19)}
+              ></div>
               <div className="up-triangle-dark-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(18)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(18)}
+              ></div>
               <div className="up-triangle-light-brown"></div>
             </div>
           </div>
@@ -465,63 +509,105 @@ function BackgammonBoard() {
         <div className="middle-bar"></div>
 
         <div className="right-bin">
-        <div className="top-row">
-          <div className="triangle-container">
-            <div className="position-box-top" onClick={() => handleClick(6)}></div>
-            <div className="down-triangle-light-brown"></div>
-          </div>
-          <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(7)}></div>
-              <div className="down-triangle-dark-brown"></div>
-          </div>
-          <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(8)}></div>
+          <div className="top-row">
+            <div className="triangle-container">
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(6)}
+              ></div>
               <div className="down-triangle-light-brown"></div>
-          </div>
-          <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(9)}></div>
+            </div>
+            <div className="triangle-container">
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(7)}
+              ></div>
               <div className="down-triangle-dark-brown"></div>
-          </div>
-          <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(10)}></div>
+            </div>
+            <div className="triangle-container">
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(8)}
+              ></div>
               <div className="down-triangle-light-brown"></div>
-          </div>
-          <div className="triangle-container">
-              <div className="position-box-top" onClick={() => handleClick(11)}></div>
+            </div>
+            <div className="triangle-container">
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(9)}
+              ></div>
               <div className="down-triangle-dark-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(10)}
+              ></div>
+              <div className="down-triangle-light-brown"></div>
+            </div>
+            <div className="triangle-container">
+              <div
+                className="position-box-top"
+                onClick={() => handleClick(11)}
+              ></div>
+              <div className="down-triangle-dark-brown"></div>
+            </div>
           </div>
-        </div>
           <div className="bottom-row">
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(17)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(17)}
+              ></div>
               <div className="up-triangle-dark-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(16)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(16)}
+              ></div>
               <div className="up-triangle-light-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(15)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(15)}
+              ></div>
               <div className="up-triangle-dark-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(14)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(14)}
+              ></div>
               <div className="up-triangle-light-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(13)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(13)}
+              ></div>
               <div className="up-triangle-dark-brown"></div>
             </div>
             <div className="triangle-container">
-              <div className="position-box-bottom" onClick={() => handleClick(12)}></div>
+              <div
+                className="position-box-bottom"
+                onClick={() => handleClick(12)}
+              ></div>
               <div className="up-triangle-light-brown"></div>
             </div>
           </div>
         </div>
         <div className="right-bar"></div>
         <div className="dead-and-home-box">
-          <div className="position-box-top-dead-and-home" onClick={() => handleClick(24)}></div>
-          <div className="position-box-bottom-dead-and-home" onClick={() => handleClick(25)}></div>
+          <div
+            className="position-box-top-dead-and-home"
+            onClick={() => handleClick(24)}
+          ></div>
+          <div
+            className="position-box-bottom-dead-and-home"
+            onClick={() => handleClick(25)}
+          ></div>
         </div>
         <div
           className={`piece_black ${
@@ -796,17 +882,11 @@ function BackgammonBoard() {
         ></div>
         <div className="popup" id="popup">
           <p className="no-margin">Congrats {currentTurn} you won the game!</p>
-          <button
-            className="popup-home"
-            onClick={() => handleClick(-1)}
-          >
+          <button className="popup-home" onClick={() => handleClick(-1)}>
             ↵
           </button>
-          <button
-            className="popup-restart"
-           onClick={() => handleClick(-3)}
-          >
-           ↻
+          <button className="popup-restart" onClick={() => handleClick(-3)}>
+            ↻
           </button>
         </div>
       </div>
@@ -817,25 +897,36 @@ function BackgammonBoard() {
         <button className="redo-button" onClick={() => handleClick(-4)}>
           ⟳
         </button>
-        <button className={`dice ${shakingButtons["dicebutton"] ? "shake-board" : ""}`} onClick={() => handleClick(-10)}>
+        <button
+          className={`dice ${
+            shakingButtons["dicebutton"] ? "shake-board" : ""
+          }`}
+          onClick={() => handleClick(-10)}
+        >
           Press To Roll!
         </button>
-        <button className={`next-turn ${shakingButtons["donebutton"] ? "shake-board" : ""}`} onClick={() => handleClick(-5)}>
+        <button
+          className={`next-turn ${
+            shakingButtons["donebutton"] ? "shake-board" : ""
+          }`}
+          onClick={() => handleClick(-5)}
+        >
           Done
         </button>
       </div>
       <div className="name-container">
         <div className="turn">Current Turn: {currentTurn}</div>
-        <div className="name-checker"
-             style={{
-              backgroundColor: playerColors[currentTurn], // Change colors as needed
-             }}>
-        </div>
+        <div
+          className="name-checker"
+          style={{
+            backgroundColor: playerColors[currentTurn], // Change colors as needed
+          }}
+        ></div>
       </div>
 
       <div className="rolls">Rolls: {currentDice.toString()}</div>
     </div>
-  )
+  );
 }
 
-export default BackgammonBoard
+export default OnlineGame;
