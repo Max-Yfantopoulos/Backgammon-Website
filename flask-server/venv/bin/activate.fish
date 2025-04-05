@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/maxyfantopoulos/Desktop/Backgammon_Flask_React/flask-server/venv"
+set -gx VIRTUAL_ENV "/Users/maxyfantopoulos/Desktop/CS_Projects/Backgammon-Website/flask-server/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

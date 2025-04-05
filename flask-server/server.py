@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request, session
 from flask_cors import CORS
-from flask_session import Session
 from OOP_Backgammon import Backgammon, Dice, Board
 import sqlite3
 import uuid

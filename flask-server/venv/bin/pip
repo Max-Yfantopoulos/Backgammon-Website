@@ -1,4 +1,4 @@
-#!/Users/maxyfantopoulos/Desktop/Backgammon_Flask_React/flask-server/venv/bin/python3.12
+#!/Users/maxyfantopoulos/Desktop/CS_Projects/Backgammon-Website/flask-server/venv/bin/python3.12
 # -*- coding: utf-8 -*-
 import re
 import sys
