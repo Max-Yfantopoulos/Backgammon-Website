@@ -3,8 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import "../styles/online.css";
 
-const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
-
 const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
 interface CheckerLocation {
@@ -419,8 +417,10 @@ function OnlineGame() {
         <button className="home" onClick={() => handleClick(-1)}>
           ↵
         </button>
-        <p>Waiting for your friend to join the lobby!</p>
-        <p>The game code is: {createdCode}</p>
+        <p className="waiting-text-1">
+          Waiting for your friend to join the lobby!
+        </p>
+        <p className="waiting-text-2">The game code is: {createdCode}</p>
       </div>
       <div className="lobby-container" id="lobby-container">
         <button className="home" onClick={() => handleClick(-1)}>
