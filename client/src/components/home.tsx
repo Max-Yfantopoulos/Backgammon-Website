@@ -1,9 +1,6 @@
 import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import io from "socket.io-client";
 import "../styles/home.css";
-
-const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
 
 function Home() {
   const navigate = useNavigate();
