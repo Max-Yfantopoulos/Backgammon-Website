@@ -450,9 +450,9 @@ function OnlineGame() {
           <button className="lobby-button" onClick={() => handleClick(-99)}>
             Join Game
           </button>
-          <button className="lobby-button" onClick={() => handleClick(-98)}>
+          {/* <button className="lobby-button" onClick={() => handleClick(-98)}>
             Play Random
-          </button>
+          </button> */}
         </div>
       </div>
       <button className="home" onClick={() => handleClick(-1)}>

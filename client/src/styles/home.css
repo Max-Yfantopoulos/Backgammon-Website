@@ -44,7 +44,7 @@ h1 {
   height: clamp(0.5rem, 10vh, 5.07vw);
   align-items: center;
   justify-content: center;
-  border: 2px solid black;
+  border: clamp(0.2vh, 0.2vw, 0.5vh) solid black;
   border-radius: 25px;
   background-color: white;
 }
