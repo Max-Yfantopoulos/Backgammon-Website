@@ -14,7 +14,7 @@ h1 {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  height: 100%; /* Full viewport height */
+  height: 100%;
   text-align: center;
   gap: 3%;
 }
@@ -47,6 +47,7 @@ h1 {
   border: 2px solid black;
   border-radius: 25px;
   background-color: white;
+  margin-bottom: 5%;
 }
 
 .name-input {
