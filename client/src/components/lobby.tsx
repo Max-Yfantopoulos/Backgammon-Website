@@ -19,7 +19,7 @@ function OnlineGame() {
     setCode(event.target.value);
   };
 
-  const triggerShake = (buttonId: string) => {
+  const triggerNameShake = (buttonId: string) => {
     setShakingName((prev) => ({ ...prev, [buttonId]: true }));
     setTimeout(() => {
       setShakingName((prev) => ({ ...prev, [buttonId]: false }));
@@ -30,7 +30,6 @@ function OnlineGame() {
     console.log("Listening for game_ready event...");
     socket.on("game_ready", (data) => {
       console.log("Game is ready:", data);
-      navigate("/online", { state: { gameId: data.game_id } });
     });
 
     return () => {
@@ -64,7 +63,7 @@ function OnlineGame() {
       });
       console.log("navigate");
     } else if (position == 1 && !code) {
-      triggerShake("first-name-input");
+      triggerNameShake("first-name-input");
     } else if (position == 2) {
       navigate("/online");
     }
@@ -72,42 +71,44 @@ function OnlineGame() {
 
   return (
     <div className="container">
-      <div className="waiting" id="waiting">
+      <div className="lobby-container">
+        <div className="waiting" id="waiting">
+          <button className="home" onClick={() => handleClick(-1)}>
+            ↵
+          </button>
+          <p>Waiting for your friend to join the lobby!</p>
+          <p>The game code is: {createdCode}</p>
+        </div>
         <button className="home" onClick={() => handleClick(-1)}>
           ↵
         </button>
-        <p>Waiting for your friend to join the lobby!</p>
-        <p>The game code is: {createdCode}</p>
-      </div>
-      <button className="home" onClick={() => handleClick(-1)}>
-        ↵
-      </button>
-      <h1>Maxgammon Lobby</h1>
-      <div
-        className={`name-input-container ${
-          shakingName["first-name-input"] ? "shake-home" : ""
-        }`}
-      >
-        <label htmlFor="name1">Code: </label>
-        <input
-          className="name-input"
-          type="text"
-          id="name1"
-          value={code}
-          onChange={handleInputChange}
-          placeholder="Enter game code"
-        />
-      </div>
-      <div className="button-container">
-        <button className="lobby-button" onClick={() => handleClick(0)}>
-          Create Game
-        </button>
-        <button className="lobby-button" onClick={() => handleClick(1)}>
-          Join Game
-        </button>
-        <button className="lobby-button" onClick={() => handleClick(2)}>
-          Play Random
-        </button>
+        <h1>Maxgammon Lobby</h1>
+        <div
+          className={`name-input-container ${
+            shakingName["first-name-input"] ? "shake-home" : ""
+          }`}
+        >
+          <label htmlFor="name1">Code: </label>
+          <input
+            className="name-input"
+            type="text"
+            id="name1"
+            value={code}
+            onChange={handleInputChange}
+            placeholder="Enter game code"
+          />
+        </div>
+        <div className="button-container">
+          <button className="lobby-button" onClick={() => handleClick(0)}>
+            Create Game
+          </button>
+          <button className="lobby-button" onClick={() => handleClick(1)}>
+            Join Game
+          </button>
+          <button className="lobby-button" onClick={() => handleClick(2)}>
+            Play Random
+          </button>
+        </div>
       </div>
     </div>
   );

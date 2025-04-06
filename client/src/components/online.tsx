@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import "../styles/online.css";
@@ -19,7 +19,7 @@ interface ValidMoves {
 function OnlineGame() {
   const navigate = useNavigate();
   const location = useLocation();
-  const gameId = location.state?.gameId;
+  const name = location.state?.name;
   const [validMoves, setValidMoves] = useState<ValidMoves>({});
   const [currentTurn, setCurrentTurn] = useState<string>("");
   const [playerColors, setPlayerColors] = useState<Record<string, string>>({});
@@ -31,38 +31,112 @@ function OnlineGame() {
   const [shakingButtons, setShakingButtons] = useState<{
     [key: string]: boolean;
   }>({});
+  const [code, setCode] = useState("");
+  const [shakingName, setShakingName] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const [gameId, setGameId] = useState("");
+  const [createdCode, setCreatedCode] = useState("");
+  const [readyToStart, setReadyToStart] = useState<boolean>(false);
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setCode(event.target.value);
+  };
+
+  const triggerNameShake = (buttonId: string) => {
+    setShakingName((prev) => ({ ...prev, [buttonId]: true }));
+    setTimeout(() => {
+      setShakingName((prev) => ({ ...prev, [buttonId]: false }));
+    }, 1950);
+  };
 
   useEffect(() => {
-    console.log("Current gameId:", gameId);
-    if (currentDice.length > 0 && currentTurn != "AI") {
-      isPossibleMove();
-    }
-    const handleWin = async () => {
-      const check = await checkWinner();
-      if (check) {
-        const popup = document.getElementById("popup");
-
-        if (popup) {
-          popup.style.display = "block";
-        } else {
-          console.error("Couldn't find popup element");
-        }
-        return;
+    if (readyToStart) {
+      console.log("Current gameId:", gameId);
+      if (currentDice.length > 0 && currentTurn != "AI") {
+        isPossibleMove();
       }
-    };
-    handleWin();
+      const handleWin = async () => {
+        const check = await checkWinner();
+        if (check) {
+          const popup = document.getElementById("popup");
+
+          if (popup) {
+            popup.style.display = "block";
+          } else {
+            console.error("Couldn't find popup element");
+          }
+          return;
+        }
+      };
+      handleWin();
+    }
   }, [currentDice]);
 
   useEffect(() => {
-    fetchColor();
-    fetchGameState();
-  }, []);
+    if (readyToStart) {
+      fetchColor();
+      fetchGameState();
+    }
+  }, [gameId]);
 
   useEffect(() => {
-    triggerShake("dicebutton");
+    if (currentTurn === name) {
+      //triggerButtonShake("dicebutton");
+    }
   }, [currentTurn]);
 
   const handleClick = async (position: number) => {
+    if (position == -100) {
+      socket.emit("create_lobby", { name: name });
+      socket.on("lobby_created", (data) => {
+        console.log("Lobby created with game ID:", data.game_id);
+        setCreatedCode(data.game_id);
+        const lobby = document.getElementById("lobby-container");
+        if (lobby) {
+          lobby.style.display = "none";
+        } else {
+          console.error("Element with ID 'waiting' not found.");
+        }
+        const waiting = document.getElementById("waiting");
+        if (waiting) {
+          waiting.style.display = "block";
+        } else {
+          console.error("Element with ID 'waiting' not found.");
+        }
+        console.log("Listening for game_ready event...");
+        socket.off("game_ready");
+        socket.on("game_ready", (data) => {
+          setReadyToStart(true);
+          setGameId(data.game_id);
+          console.log("Game is ready:", data);
+          const waiting = document.getElementById("waiting");
+          if (waiting) {
+            waiting.style.display = "none";
+          } else {
+            console.error("Element with ID 'waiting' not found.");
+          }
+        });
+      });
+    } else if (position == -99 && code) {
+      console.log("Joining room with gameId:", code);
+      socket.emit("join_game", { player_name: name, game_id: code });
+      socket.off("game_ready");
+      socket.on("game_ready", (data) => {
+        setReadyToStart(true);
+        setGameId(data.game_id);
+        const lobby = document.getElementById("lobby-container");
+        if (lobby) {
+          lobby.style.display = "none";
+        } else {
+          console.error("Element with ID 'lobby' not found.");
+        }
+      });
+      console.log("navigate");
+    } else if (position == -99 && !code) {
+      triggerNameShake("first-name-input");
+    } else if (position == -98) {
+    }
     if (position == -3) {
       restartGame();
       fetchGameState();
@@ -75,66 +149,29 @@ function OnlineGame() {
     } else if (position == -1) {
       navigate("/");
     }
-
-    if (currentTurn === "AI") {
-      return;
-    }
     console.log("You clicked on box:", position);
     console.log("Current Player: ", currentTurn);
     console.log("Current Dice: ", currentDice);
-    if (position in validMoves && previousPosition != null) {
-      socket.emit("make_move", {
-        game_id: gameId,
-        previous_position: previousPosition,
-        position,
-      });
-
-      socket.on("move_made", (data) => {
-        if (data.message) {
-          console.log(data.message);
-          setCurrentTurn(data.current_turn);
-          setPreviousPosition(null);
-          setCurrentDice(data.rolls);
-          setCurrentLocations(data.checkers_location);
-          if (data.rolls.length === 0) {
-            triggerShake("donebutton");
-          }
-        }
-      });
-
-      socket.on("error", (error) => {
-        console.error("Error making move:", error.message);
-      });
-    } else if (position >= 0 && position <= 27) {
-      socket.emit("pick_start", { game_id: gameId, position });
-
-      socket.on("start_picked", (data) => {
-        if (data.message) {
-          console.log("Possible moves:", data.message);
-          setPreviousPosition(position);
-          setValidMoves(data.message);
-        } else {
-          console.log("No possible moves available");
-        }
-      });
-
-      socket.on("error", (error) => {
-        console.error("Error fetching possible moves:", error.message);
-      });
-    } else if (position == -10) {
-      stopShake("dicebutton");
-      rollDice();
-    } else if (position == -2) {
-      undo();
-    } else if (position == -4) {
-      redo();
-    } else if (position == -5) {
-      stopShake("donebutton");
-      changeTurn();
+    if (currentTurn === name) {
+      if (position in validMoves && previousPosition != null) {
+        makeMove(position);
+      } else if (position >= 0 && position <= 27) {
+        pickStart(position);
+      } else if (position == -10) {
+        stopShake("dicebutton");
+        rollDice();
+      } else if (position == -2) {
+        undo();
+      } else if (position == -4) {
+        redo();
+      } else if (position == -5) {
+        stopShake("donebutton");
+        changeTurn();
+      }
     }
   };
 
-  const triggerShake = (buttonId: string) => {
+  const triggerButtonShake = (buttonId: string) => {
     setShakingButtons((prev) => ({ ...prev, [buttonId]: true }));
   };
 
@@ -143,8 +180,9 @@ function OnlineGame() {
   };
 
   const fetchGameState = () => {
+    socket.off("fetch_state");
+    socket.off("error");
     socket.emit("fetch_state", { game_id: gameId });
-
     socket.on("state_fetched", (data) => {
       console.log("Fetched Data:", data);
       if (data.current_turn) {
@@ -164,13 +202,65 @@ function OnlineGame() {
     });
   };
 
+  const makeMove = (position: number) => {
+    socket.off("move_made");
+    socket.off("error");
+    socket.emit("make_move", {
+      game_id: gameId,
+      previous_position: previousPosition,
+      end_position: position,
+    });
+
+    socket.on("move_made", (data) => {
+      if (data.message) {
+        console.log(data.message);
+        setCurrentTurn(data.current_turn);
+        setPreviousPosition(null);
+        setCurrentDice(data.rolls);
+        setCurrentLocations(data.checkers_location);
+        if (data.rolls.length === 0) {
+          if (currentTurn === name) {
+            //triggerButtonShake("donebutton");
+          }
+        }
+      }
+    });
+
+    socket.on("error", (error) => {
+      console.error("Error making move:", error.message);
+    });
+    fetchGameState();
+  };
+
+  const pickStart = (position: number) => {
+    socket.off("start_picked");
+    socket.off("error");
+    socket.emit("pick_start", { game_id: gameId, position: position });
+    socket.on("start_picked", (data) => {
+      if (data.message) {
+        console.log("Possible moves:", data.message);
+        setPreviousPosition(position);
+        setValidMoves(data.message);
+      } else {
+        console.log("No possible moves available");
+      }
+    });
+    socket.on("error", (error) => {
+      console.error("Error fetching possible moves:", error.message);
+    });
+  };
+
   const isPossibleMove = () => {
+    socket.off("is_possible_move");
+    socket.off("error");
     socket.emit("is_possible_move", { game_id: gameId });
     socket.on("possible_move_checked", (data) => {
       if (data.message === "No Possible Move!") {
         setCurrentTurn(data.current_turn);
         setCurrentDice(data.rolls);
-        triggerShake("donebutton");
+        if (data.current_turn === name) {
+          //triggerButtonShake("dicebutton");
+        }
         console.log("No possible moves, switching turn to:", data.current_turn);
       }
     });
@@ -184,8 +274,9 @@ function OnlineGame() {
 
   const rollDice = () => {
     console.log("You rolled the dice.");
+    socket.off("dice_rolled");
+    socket.off("error");
     socket.emit("roll_dice", { game_id: gameId });
-
     socket.on("dice_rolled", (data) => {
       if (data.message) {
         setCurrentDice(data.rolls);
@@ -197,11 +288,13 @@ function OnlineGame() {
     socket.on("error", (error) => {
       console.error("Error rolling dice:", error.message);
     });
+    fetchGameState();
   };
 
   const checkWinner = async () => {
+    socket.off("winner_checked");
+    socket.off("error");
     socket.emit("check_winner", { game_id: gameId });
-
     return new Promise((resolve) => {
       socket.on("winner_checked", (data) => {
         if (data.message === "Winner!") {
@@ -218,8 +311,9 @@ function OnlineGame() {
   };
 
   const undo = async () => {
+    socket.off("undo_done");
+    socket.off("error");
     socket.emit("undo", { game_id: gameId });
-
     socket.on("undo_done", (data) => {
       if (currentDice.length === 0 && data.rolls.length > 0) {
         stopShake("donebutton");
@@ -234,14 +328,21 @@ function OnlineGame() {
     socket.on("error", (error) => {
       console.error("Error undoing move:", error.message);
     });
+    fetchGameState();
   };
 
   const redo = async () => {
+    socket.off("redo_done");
+    socket.off("error");
     socket.emit("redo", { game_id: gameId });
 
     socket.on("redo_done", (data) => {
-      if (currentDice.length === 1 && data.rolls.length === 0) {
-        triggerShake("donebutton");
+      if (
+        currentDice.length === 1 &&
+        data.rolls.length === 0 &&
+        currentTurn === name
+      ) {
+        //triggerButtonShake("donebutton");
       }
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
@@ -253,9 +354,12 @@ function OnlineGame() {
     socket.on("error", (error) => {
       console.error("Error redoing move:", error.message);
     });
+    fetchGameState();
   };
 
   const changeTurn = () => {
+    socket.off("turn_changed");
+    socket.off("error");
     socket.emit("change_turn", { game_id: gameId });
     socket.on("turn_changed", (data) => {
       setCurrentTurn(data.current_turn);
@@ -264,11 +368,13 @@ function OnlineGame() {
     socket.on("error", (error) => {
       console.error("Error changing turn:", error.message);
     });
+    fetchGameState();
   };
 
   const restartGame = async () => {
+    socket.off("game_restarted");
+    socket.off("error");
     socket.emit("restart_game", { game_id: gameId });
-
     socket.on("game_restarted", (data) => {
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
@@ -280,11 +386,14 @@ function OnlineGame() {
     socket.on("error", (error) => {
       console.error("Error restarting game:", error.message);
     });
+    fetchGameState();
   };
 
   const fetchColor = async () => {
+    console.log("Game ID: " + gameId);
+    socket.off("color_fetched");
+    socket.off("error");
     socket.emit("fetch_color", { game_id: gameId });
-
     socket.on("color_fetched", (data) => {
       if (data.current_color === "black") {
         setPlayerColors({
@@ -306,6 +415,45 @@ function OnlineGame() {
 
   return (
     <div className="container">
+      <div className="waiting" id="waiting">
+        <button className="home" onClick={() => handleClick(-1)}>
+          ↵
+        </button>
+        <p>Waiting for your friend to join the lobby!</p>
+        <p>The game code is: {createdCode}</p>
+      </div>
+      <div className="lobby-container" id="lobby-container">
+        <button className="home" onClick={() => handleClick(-1)}>
+          ↵
+        </button>
+        <h1>Maxgammon Lobby</h1>
+        <div
+          className={`name-input-container ${
+            shakingName["first-name-input"] ? "shake-home" : ""
+          }`}
+        >
+          <label htmlFor="name1">Code: </label>
+          <input
+            className="name-input"
+            type="text"
+            id="name1"
+            value={code}
+            onChange={handleInputChange}
+            placeholder="Enter game code"
+          />
+        </div>
+        <div className="button-container">
+          <button className="lobby-button" onClick={() => handleClick(-100)}>
+            Create Game
+          </button>
+          <button className="lobby-button" onClick={() => handleClick(-99)}>
+            Join Game
+          </button>
+          <button className="lobby-button" onClick={() => handleClick(-98)}>
+            Play Random
+          </button>
+        </div>
+      </div>
       <button className="home" onClick={() => handleClick(-1)}>
         ↵
       </button>

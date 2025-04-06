@@ -421,7 +421,7 @@ def fetch_color():
 
 @socketio.on("create_lobby")
 def handle_create_game(data):
-    player_one_name = data.get("name1")
+    player_one_name = data.get("name")
     if not player_one_name:
         socketio.emit("error", {"message": "Missing player names"})
         return
@@ -524,11 +524,28 @@ def handle_roll_dice(data):
 @socketio.on("make_move")
 def handle_make_move(data):
     game_id = data.get("game_id")
-    start = data.get("previousPosition")
-    end = data.get("position")
+    start = data.get("previous_position")
+    end = data.get("end_position")
 
-    if not game_id or start is None or end is None:
-        socketio.emit("error", {"message": "Missing game ID or positions"})
+    if not game_id:
+        socketio.emit(
+            "error",
+            {"message": "Missing game ID"},
+        )
+        return
+
+    if start is None:
+        socketio.emit(
+            "error",
+            {"message": start},
+        )
+        return
+
+    if end is None:
+        socketio.emit(
+            "error",
+            {"message": "end is none"},
+        )
         return
 
     response, status = process_make_move(game_id, start, end)
