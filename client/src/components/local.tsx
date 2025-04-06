@@ -78,6 +78,7 @@ function LocalGame() {
     } else if (currentTurn === "AI") {
       if (currentDice.length === 0) {
         rollDice();
+        fetchGameState();
       }
       fetchAIPlay();
     }
