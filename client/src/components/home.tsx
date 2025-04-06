@@ -4,7 +4,6 @@ import io from "socket.io-client";
 import "../styles/home.css";
 
 const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
-const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
 function Home() {
   const navigate = useNavigate();
@@ -31,13 +30,11 @@ function Home() {
 
   const handleClick = async (position: number) => {
     console.log("You clicked on box:", position);
-    console.log("Backend URL:", Backend_Url);
     if (position == 0 && names.name1) {
       navigate("/local", { state: { player_one_name: names.name1 } });
     } else if (position == 0 && !names.name1) {
       triggerShake("first-name-input");
     } else if (position == 1 && names.name1 && names.name2) {
-      console.log("USER GAME!!");
       navigate("/local", {
         state: { player_one_name: names.name1, player_two_name: names.name2 },
       });
