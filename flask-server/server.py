@@ -450,7 +450,7 @@ def handle_create_local_game(data):
     save_game(game_id, game.to_json())
     socketio.emit(
         "ai_game_created",
-        {"game_id": game_id, "message": "Local game created"},
+        {"game_id": game_id, "message": "ai game created"},
         to=request.sid,
     )
 

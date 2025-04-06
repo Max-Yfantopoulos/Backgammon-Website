@@ -44,7 +44,6 @@ function LocalGame() {
 
   useEffect(() => {
     if (readyToStart) {
-      console.log("Current gameId:", gameId);
       if (currentDice.length > 0 && currentTurn != "AI") {
         isPossibleMove();
       }
@@ -146,8 +145,8 @@ function LocalGame() {
     socket.off("error");
     socket.emit("create_ai_game", { player_one_name: player_one_name });
     socket.on("ai_game_created", (data: any) => {
-      console.log("Local game created:", data);
-      console.log("AI GAME!!");
+      console.log("AI game created:", data);
+
       setGameId(data.game_id);
       setReadyToStart(true);
     });
@@ -169,7 +168,7 @@ function LocalGame() {
 
   const fetchGameState = () => {
     console.log("fetching game state");
-    socket.off("fetch_state");
+    socket.off("state_fetched");
     socket.off("error");
     socket.emit("fetch_state", { game_id: gameId });
     socket.on("state_fetched", (data: any) => {
@@ -183,7 +182,6 @@ function LocalGame() {
       if (data.checkers_location) {
         setCurrentLocations(data.checkers_location);
       }
-      console.log("Updated State:", currentLocations);
     });
 
     socket.on("error", (error: any) => {
@@ -258,7 +256,7 @@ function LocalGame() {
   };
 
   const isPossibleMove = () => {
-    socket.off("is_possible_move");
+    socket.off("possible_move_checked");
     socket.off("error");
     socket.emit("is_possible_move", { game_id: gameId });
     socket.on("possible_move_checked", (data: any) => {
