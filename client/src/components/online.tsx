@@ -87,7 +87,7 @@ function OnlineGame() {
   const handleClick = async (position: number) => {
     if (position == -100) {
       socket.emit("create_lobby", { name: name });
-      socket.on("lobby_created", (data) => {
+      socket.on("lobby_created", (data: any) => {
         console.log("Lobby created with game ID:", data.game_id);
         setCreatedCode(data.game_id);
         const lobby = document.getElementById("lobby-container");
@@ -104,7 +104,7 @@ function OnlineGame() {
         }
         console.log("Listening for game_ready event...");
         socket.off("game_ready");
-        socket.on("game_ready", (data) => {
+        socket.on("game_ready", (data: any) => {
           setReadyToStart(true);
           setGameId(data.game_id);
           console.log("Game is ready:", data);
@@ -120,7 +120,7 @@ function OnlineGame() {
       console.log("Joining room with gameId:", code);
       socket.emit("join_game", { player_name: name, game_id: code });
       socket.off("game_ready");
-      socket.on("game_ready", (data) => {
+      socket.on("game_ready", (data: any) => {
         setReadyToStart(true);
         setGameId(data.game_id);
         const lobby = document.getElementById("lobby-container");
@@ -181,7 +181,7 @@ function OnlineGame() {
     socket.off("fetch_state");
     socket.off("error");
     socket.emit("fetch_state", { game_id: gameId });
-    socket.on("state_fetched", (data) => {
+    socket.on("state_fetched", (data: any) => {
       console.log("Fetched Data:", data);
       if (data.current_turn) {
         setCurrentTurn(data.current_turn);
@@ -209,7 +209,7 @@ function OnlineGame() {
       end_position: position,
     });
 
-    socket.on("move_made", (data) => {
+    socket.on("move_made", (data: any) => {
       if (data.message) {
         console.log(data.message);
         setCurrentTurn(data.current_turn);
@@ -234,7 +234,7 @@ function OnlineGame() {
     socket.off("start_picked");
     socket.off("error");
     socket.emit("pick_start", { game_id: gameId, position: position });
-    socket.on("start_picked", (data) => {
+    socket.on("start_picked", (data: any) => {
       if (data.message) {
         console.log("Possible moves:", data.message);
         setPreviousPosition(position);
@@ -252,7 +252,7 @@ function OnlineGame() {
     socket.off("is_possible_move");
     socket.off("error");
     socket.emit("is_possible_move", { game_id: gameId });
-    socket.on("possible_move_checked", (data) => {
+    socket.on("possible_move_checked", (data: any) => {
       if (data.message === "No Possible Move!") {
         setCurrentTurn(data.current_turn);
         setCurrentDice(data.rolls);
@@ -275,7 +275,7 @@ function OnlineGame() {
     socket.off("dice_rolled");
     socket.off("error");
     socket.emit("roll_dice", { game_id: gameId });
-    socket.on("dice_rolled", (data) => {
+    socket.on("dice_rolled", (data: any) => {
       if (data.message) {
         setCurrentDice(data.rolls);
       } else {
@@ -294,7 +294,7 @@ function OnlineGame() {
     socket.off("error");
     socket.emit("check_winner", { game_id: gameId });
     return new Promise((resolve) => {
-      socket.on("winner_checked", (data) => {
+      socket.on("winner_checked", (data: any) => {
         if (data.message === "Winner!") {
           resolve(true);
         } else {
@@ -312,7 +312,7 @@ function OnlineGame() {
     socket.off("undo_done");
     socket.off("error");
     socket.emit("undo", { game_id: gameId });
-    socket.on("undo_done", (data) => {
+    socket.on("undo_done", (data: any) => {
       if (currentDice.length === 0 && data.rolls.length > 0) {
         stopShake("donebutton");
       }
@@ -334,7 +334,7 @@ function OnlineGame() {
     socket.off("error");
     socket.emit("redo", { game_id: gameId });
 
-    socket.on("redo_done", (data) => {
+    socket.on("redo_done", (data: any) => {
       if (
         currentDice.length === 1 &&
         data.rolls.length === 0 &&
@@ -359,7 +359,7 @@ function OnlineGame() {
     socket.off("turn_changed");
     socket.off("error");
     socket.emit("change_turn", { game_id: gameId });
-    socket.on("turn_changed", (data) => {
+    socket.on("turn_changed", (data: any) => {
       setCurrentTurn(data.current_turn);
       console.log("Turn changed to:", data.current_turn);
     });
@@ -373,7 +373,7 @@ function OnlineGame() {
     socket.off("game_restarted");
     socket.off("error");
     socket.emit("restart_game", { game_id: gameId });
-    socket.on("game_restarted", (data) => {
+    socket.on("game_restarted", (data: any) => {
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
       setCurrentDice(data.rolls);
@@ -392,7 +392,7 @@ function OnlineGame() {
     socket.off("color_fetched");
     socket.off("error");
     socket.emit("fetch_color", { game_id: gameId });
-    socket.on("color_fetched", (data) => {
+    socket.on("color_fetched", (data: any) => {
       if (data.current_color === "black") {
         setPlayerColors({
           [data.current_turn]: "#696969",
