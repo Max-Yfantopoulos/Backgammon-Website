@@ -64,7 +64,7 @@
   position: relative;
   height: 100%;
   width: clamp(1rem, 14vw, 25vh);
-  font-size: clamp(0.5rem, 1.4vw, 2.76vh);
+  font-size: clamp(0.2rem, 1.4vw, 2.76vh);
   font-weight: bold;
   border-radius: 50px;
 }
