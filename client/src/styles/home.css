@@ -14,7 +14,7 @@ h1 {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  height: 100vh; /* Full viewport height */
+  height: 100%; /* Full viewport height */
   text-align: center;
   gap: 3%;
 }
