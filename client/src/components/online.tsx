@@ -2,6 +2,7 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import "../styles/online.css";
+import "../styles/game.css";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
@@ -412,7 +413,7 @@ function OnlineGame() {
   };
 
   return (
-    <div className="container">
+    <div className="container-game">
       <div className="waiting" id="waiting">
         <button className="home" onClick={() => handleClick(-1)}>
           ↵

@@ -16,7 +16,7 @@ h1 {
   align-items: center;
   height: 100%;
   text-align: center;
-  gap: 3%;
+  gap: clamp(0.1rem, calc(1vw + 2vh), 5rem);
 }
 
 .button-container {
@@ -47,7 +47,6 @@ h1 {
   border: 2px solid black;
   border-radius: 25px;
   background-color: white;
-  margin-bottom: 5%;
 }
 
 .name-input {

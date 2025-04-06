@@ -1,4 +1,4 @@
-.container {
+.container-game {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -260,7 +260,7 @@ button:active {
   display: flex;
   width: 100%;
   height: clamp(0.5rem, 7vh, 3.55vw);
-  margin-top: 2%;
+  margin-top: clamp(0.1rem, calc(0.5vw + 1vh), 1rem);
   gap: 10px;
   align-items: center;
   justify-content: center;
@@ -285,7 +285,7 @@ button:active {
   position: relative;
   height: 100%;
   width: clamp(1rem, 14vw, 25vh);
-  font-size: clamp(0.5rem, 1.4vw, 2.76vh);
+  font-size: clamp(0.1rem, 1.4vw, 2.76vh);
   font-weight: bold;
   border-radius: 50px;
 }
@@ -294,7 +294,7 @@ button:active {
   position: relative;
   height: 100%;
   width: clamp(1rem, 7vw, 13.8vh);
-  font-size: clamp(0.5rem, 1.4vw, 2.76vh);
+  font-size: clamp(0.1rem, 1.4vw, 2.76vh);
   font-weight: bold;
   aspect-ratio: 2.2;
   border-radius: 25px;

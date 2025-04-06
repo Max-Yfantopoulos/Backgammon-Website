@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/local.css";
+import "../styles/game.css";
 
 const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
 
@@ -398,7 +398,7 @@ function LocalGame() {
   };
 
   return (
-    <div className="container">
+    <div className="container-game">
       <button className="home" onClick={() => handleClick(-1)}>
         ↵
       </button>
