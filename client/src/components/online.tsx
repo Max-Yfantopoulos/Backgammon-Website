@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
+import io from "socket.io-client";
 import "../styles/online.css";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
@@ -169,9 +169,9 @@ function OnlineGame() {
     }
   };
 
-  const triggerButtonShake = (buttonId: string) => {
-    setShakingButtons((prev) => ({ ...prev, [buttonId]: true }));
-  };
+  // const triggerButtonShake = (buttonId: string) => {
+  //   setShakingButtons((prev) => ({ ...prev, [buttonId]: true }));
+  // };
 
   const stopShake = (buttonId: string) => {
     setShakingButtons((prev) => ({ ...prev, [buttonId]: false }));
@@ -195,7 +195,7 @@ function OnlineGame() {
       console.log("Updated State:", currentLocations);
     });
 
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error("Error fetching game state:", error.message);
     });
   };
@@ -224,7 +224,7 @@ function OnlineGame() {
       }
     });
 
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error("Error making move:", error.message);
     });
     fetchGameState();
@@ -243,7 +243,7 @@ function OnlineGame() {
         console.log("No possible moves available");
       }
     });
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error("Error fetching possible moves:", error.message);
     });
   };
@@ -262,7 +262,7 @@ function OnlineGame() {
         console.log("No possible moves, switching turn to:", data.current_turn);
       }
     });
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error(
         "Error checking if there is a possible move:",
         error.message
@@ -283,7 +283,7 @@ function OnlineGame() {
       }
     });
 
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error("Error rolling dice:", error.message);
     });
     fetchGameState();
@@ -301,7 +301,7 @@ function OnlineGame() {
           resolve(false);
         }
       });
-      socket.on("error", (error) => {
+      socket.on("error", (error: any) => {
         console.error("Error checking winner:", error.message);
         resolve(false);
       });
@@ -323,7 +323,7 @@ function OnlineGame() {
       setCurrentLocations(data.checkers_location);
     });
 
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error("Error undoing move:", error.message);
     });
     fetchGameState();
@@ -349,7 +349,7 @@ function OnlineGame() {
       setCurrentLocations(data.checkers_location);
     });
 
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error("Error redoing move:", error.message);
     });
     fetchGameState();
@@ -363,7 +363,7 @@ function OnlineGame() {
       setCurrentTurn(data.current_turn);
       console.log("Turn changed to:", data.current_turn);
     });
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error("Error changing turn:", error.message);
     });
     fetchGameState();
@@ -381,7 +381,7 @@ function OnlineGame() {
       setCurrentLocations(data.checkers_location);
     });
 
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error("Error restarting game:", error.message);
     });
     fetchGameState();
@@ -406,7 +406,7 @@ function OnlineGame() {
       }
     });
 
-    socket.on("error", (error) => {
+    socket.on("error", (error: any) => {
       console.error("Error fetching colors:", error.message);
     });
   };
