@@ -31,6 +31,7 @@
   width: 6.5%;
   height: 100%;
   background-color: #a1662f;
+  box-sizing: border-box;
 }
 
 .position-box-top-dead-and-home,
