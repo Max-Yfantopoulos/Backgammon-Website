@@ -144,6 +144,28 @@ def process_make_move(game_id, start, end):
     }, 200
 
 
+def process_ai_play(game_id):
+    game_data = load_game(game_id)
+    if not game_data:
+        return jsonify({"error": "Game not found"}), 404
+    game = Backgammon.from_json(game_data)
+    while game.rolls != []:
+        # profiler = cProfile.Profile()
+        # profiler.enable()
+        game.ai_play()
+        # profiler.disable()
+        # stats = pstats.Stats(profiler)
+        # stats.strip_dirs().sort_stats('cumulative').print_stats(20)
+    game.current_turn = (game.current_turn + 1) % 2
+    save_game(game_id, game.to_json())
+    return {
+        "message": "AI Player",
+        "current_turn": game.players[game.current_turn].name,
+        "rolls": game.rolls,
+        "checkers_location": [checker.to_dict() for checker in game.checkers],
+    }, 200
+
+
 def process_is_possible_move(game_id):
     game_data = load_game(game_id)
     if not game_data:
@@ -330,27 +352,8 @@ def ai_play():
     game_id = request.headers.get("Game-ID")
     if not game_id:
         return jsonify({"error": "Missing Game-ID"}), 400
-    game_data = load_game(game_id)
-    if not game_data:
-        return jsonify({"error": "Game not found"}), 404
-    game = Backgammon.from_json(game_data)
-    while game.rolls != []:
-        # profiler = cProfile.Profile()
-        # profiler.enable()
-        game.ai_play()
-        # profiler.disable()
-        # stats = pstats.Stats(profiler)
-        # stats.strip_dirs().sort_stats('cumulative').print_stats(20)
-    game.current_turn = (game.current_turn + 1) % 2
-    save_game(game_id, game.to_json())
-    return jsonify(
-        {
-            "message": "AI Player",
-            "current_turn": game.players[game.current_turn].name,
-            "rolls": game.rolls,
-            "checkers_location": [checker.to_dict() for checker in game.checkers],
-        }
-    )
+    response, status = process_ai_play(game_id)
+    return jsonify(response), status
 
 
 @app.route("/api/is_possible_move", methods=["POST"])
@@ -431,6 +434,44 @@ def handle_create_game(data):
     socketio.emit(
         "lobby_created",
         {"game_id": game_id, "message": "Lobby created"},
+        to=request.sid,
+    )
+
+
+@socketio.on("create_ai_game")
+def handle_create_local_game(data):
+    player_one_name = data.get("player_one_name")
+    if not player_one_name:
+        socketio.emit("error", {"message": "Missing player names"})
+        return
+    game_id = generate_game_code()
+    join_room(game_id)
+    game = Backgammon(name1="AI", name2=player_one_name, AI1="Monte", AI2="User")
+    save_game(game_id, game.to_json())
+    socketio.emit(
+        "ai_game_created",
+        {"game_id": game_id, "message": "Local game created"},
+        to=request.sid,
+    )
+
+
+@socketio.on("create_local_game")
+def handle_create_local_game(data):
+    player_one_name = data.get("player_one_name")
+    player_two_name = data.get("player_two_name")
+    if not player_one_name or not player_two_name:
+        socketio.emit("error", {"message": "Missing player names"})
+        return
+    game_id = generate_game_code()
+    print(game_id)
+    join_room(game_id)
+    game = Backgammon(
+        name1=player_one_name, name2=player_two_name, AI1="User", AI2="User"
+    )
+    save_game(game_id, game.to_json())
+    socketio.emit(
+        "local_game_created",
+        {"game_id": game_id, "message": "Local game created"},
         to=request.sid,
     )
 
@@ -551,6 +592,20 @@ def handle_make_move(data):
     response, status = process_make_move(game_id, start, end)
     if status == 200:
         socketio.emit("move_made", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("ai_play")
+def handle_ai_play(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_ai_play(game_id)
+    if status == 200:
+        socketio.emit("ai_play_done", response, room=game_id)
     else:
         socketio.emit("error", response)
 

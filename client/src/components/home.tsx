@@ -1,8 +1,10 @@
 import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import io from "socket.io-client";
 import "../styles/home.css";
 
 const Backend_Url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
+const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
 function Home() {
   const navigate = useNavigate();
@@ -31,52 +33,14 @@ function Home() {
     console.log("You clicked on box:", position);
     console.log("Backend URL:", Backend_Url);
     if (position == 0 && names.name1) {
-      try {
-        console.log("Sending request to startvsAI with:", names.name1);
-        const response = await fetch(`${Backend_Url}/api/startvsAI`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: names.name1,
-          }),
-        });
-        const data = await response.json();
-        const gameId = data.game_id;
-        sessionStorage.setItem("game_id", gameId);
-        console.log("Sendinsup");
-        navigate("/local");
-      } catch (error) {
-        console.error("Error rolling:", error);
-      }
+      navigate("/local", { state: { player_one_name: names.name1 } });
     } else if (position == 0 && !names.name1) {
       triggerShake("first-name-input");
     } else if (position == 1 && names.name1 && names.name2) {
-      try {
-        console.log(
-          "Sending request to startvsUser with:",
-          names.name1,
-          names.name2
-        );
-        const response = await fetch(`${Backend_Url}/api/startvsUser`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name1: names.name1,
-            name2: names.name2,
-          }),
-        });
-        const data = await response.json();
-        const gameId = data.game_id;
-        sessionStorage.setItem("game_id", gameId);
-        console.log("USER GAME!!");
-        navigate("/local");
-      } catch (error) {
-        console.error("Error rolling:", error);
-      }
+      console.log("USER GAME!!");
+      navigate("/local", {
+        state: { player_one_name: names.name1, player_two_name: names.name2 },
+      });
     } else if (position == 1 && !names.name1 && names.name2) {
       triggerShake("first-name-input");
     } else if (position == 1 && names.name1 && !names.name2) {

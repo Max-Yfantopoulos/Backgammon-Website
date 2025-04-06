@@ -19,6 +19,7 @@ function OnlineGame() {
   const navigate = useNavigate();
   const location = useLocation();
   const name = location.state?.name;
+  const [gameOver, setGameOver] = useState<boolean>(false);
   const [validMoves, setValidMoves] = useState<ValidMoves>({});
   const [currentTurn, setCurrentTurn] = useState<string>("");
   const [playerColors, setPlayerColors] = useState<Record<string, string>>({});
@@ -58,6 +59,7 @@ function OnlineGame() {
       const handleWin = async () => {
         const check = await checkWinner();
         if (check) {
+          setGameOver(true);
           const popup = document.getElementById("popup");
 
           if (popup) {
@@ -147,6 +149,10 @@ function OnlineGame() {
       }
     } else if (position == -1) {
       navigate("/");
+    }
+
+    if (gameOver) {
+      return;
     }
     console.log("You clicked on box:", position);
     console.log("Current Player: ", currentTurn);
@@ -380,6 +386,7 @@ function OnlineGame() {
       setCurrentDice(data.rolls);
       setValidMoves({});
       setCurrentLocations(data.checkers_location);
+      setGameOver(false);
     });
 
     socket.on("error", (error: any) => {
