@@ -49,9 +49,8 @@ function LocalGame() {
         isPossibleMove();
       }
       if (currentTurn === "AI" && !aiPlaying) {
-        setAIPlaying(true);
         fetchGameState();
-        fetchAIPlay();
+        setAIPlaying(true);
       }
       const handleWin = async () => {
         const check = await checkWinner();
@@ -187,6 +186,9 @@ function LocalGame() {
       }
       if (data.checkers_location) {
         setCurrentLocations(data.checkers_location);
+      }
+      if (data.current_turn === "AI") {
+        fetchAIPlay();
       }
     });
 
