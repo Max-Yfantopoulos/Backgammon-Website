@@ -898,7 +898,14 @@ function LocalGame() {
             top: `${currentLocations[29]?.y || 0}%`,
           }}
         ></div>
-        <div className="popup popup-winner" id="popup">
+        <div
+          className={`popup ${
+            !player_two_name && currentTurn === "AI"
+              ? "popup-loser"
+              : "popup-winner"
+          }`}
+          id="popup"
+        >
           <p className="text-in-middle">
             Congrats {currentTurn} you won the game!
           </p>
