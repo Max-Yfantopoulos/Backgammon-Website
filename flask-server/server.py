@@ -260,6 +260,22 @@ def process_restart_game(game_id):
     }, 200
 
 
+def auto_restart_game(game_id):
+    game_data = load_game(game_id)
+    if not game_data:
+        return {"error": "Game not found"}, 404
+    game = Backgammon.from_json(game_data)
+    game.restart_game()
+    save_game(game_id, game.to_json())
+    return {
+        "game": "game restarted",
+        "current_turn": game.players[game.current_turn].name,
+        "rolls": game.rolls,
+        "checkers_location": [checker.to_dict() for checker in game.checkers],
+        "num_restarts": game.num_restarts,
+    }, 200
+
+
 def process_fetch_color(game_id):
     game_data = load_game(game_id)
     if not game_data:
@@ -702,6 +718,20 @@ def handle_restart_game(data):
     response, status = process_restart_game(game_id)
     if status == 200:
         socketio.emit("game_restarted", response, room=game_id)
+    else:
+        socketio.emit("error", response)
+
+
+@socketio.on("auto_restart_game")
+def handle_restart_game(data):
+    game_id = data.get("game_id")
+    if not game_id:
+        socketio.emit("error", {"message": "Missing game ID"})
+        return
+
+    response, status = process_restart_game(game_id)
+    if status == 200:
+        socketio.emit("restarted_game_auto", response, room=game_id)
     else:
         socketio.emit("error", response)
 

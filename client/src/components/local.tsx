@@ -373,10 +373,10 @@ function LocalGame() {
   };
 
   const restartGame = async () => {
-    socket.off("game_restarted");
+    socket.off("restarted_game_auto");
     socket.off("error");
-    socket.emit("restart_game", { game_id: gameId });
-    socket.on("game_restarted", (data: any) => {
+    socket.emit("auto_restart_game", { game_id: gameId });
+    socket.on("restarted_game_auto", (data: any) => {
       setGameOver(false);
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
