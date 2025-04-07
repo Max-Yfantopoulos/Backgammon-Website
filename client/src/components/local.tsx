@@ -188,9 +188,6 @@ function LocalGame() {
       if (data.checkers_location) {
         setCurrentLocations(data.checkers_location);
       }
-      if (data.current_turn === "AI") {
-        fetchAIPlay();
-      }
     });
 
     socket.on("error", (error: any) => {
