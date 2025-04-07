@@ -907,7 +907,9 @@ function LocalGame() {
           id="popup"
         >
           <p className="text-in-middle">
-            Congrats {currentTurn} you won the game!
+            {!player_two_name && currentTurn === "AI"
+              ? `Unforunately you lost the game ${player_one_name}... AI rules for now`
+              : `Congrats ${currentTurn} you won the game!`}
           </p>
           <button className="popup-home" onClick={() => handleClick(-1)}>
             ↵
