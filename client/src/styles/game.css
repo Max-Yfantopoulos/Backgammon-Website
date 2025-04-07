@@ -205,7 +205,7 @@
   border: 2px solid black;
   border-radius: 50px;
   z-index: 200;
-  display: inline-block;
+  display: none;
   box-sizing: border-box;
 }
 
