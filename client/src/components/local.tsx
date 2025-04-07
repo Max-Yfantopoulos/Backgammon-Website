@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import "../styles/game.css";
-import { read } from "fs";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
