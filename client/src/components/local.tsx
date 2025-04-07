@@ -235,7 +235,6 @@ function LocalGame() {
         setCurrentDice(data.rolls);
         setCurrentLocations(data.checkers_location);
         setValidMoves({});
-        fetchGameState();
       }
     });
     socket.on("error", (error: any) => {
