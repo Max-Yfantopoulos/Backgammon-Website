@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import "../styles/game.css";
+import { read } from "fs";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
@@ -78,13 +79,15 @@ function LocalGame() {
   }, [gameId]);
 
   useEffect(() => {
-    fetchGameState();
-    if (currentTurn !== "AI") {
-      triggerButtonShake("dicebutton");
-    } else if (currentTurn === "AI") {
-      setAIPlaying(false);
-      if (currentDice.length === 0) {
-        rollDice();
+    if (readyToStart) {
+      fetchGameState();
+      if (currentTurn !== "AI") {
+        triggerButtonShake("dicebutton");
+      } else if (currentTurn === "AI") {
+        setAIPlaying(false);
+        if (currentDice.length === 0) {
+          rollDice();
+        }
       }
     }
   }, [currentTurn]);
