@@ -49,8 +49,8 @@ function LocalGame() {
         isPossibleMove();
       }
       if (currentTurn === "AI" && !aiPlaying) {
-        fetchGameState();
         setAIPlaying(true);
+        fetchAIPlay();
       }
       const handleWin = async () => {
         const check = await checkWinner();
@@ -78,6 +78,7 @@ function LocalGame() {
   }, [gameId]);
 
   useEffect(() => {
+    fetchGameState();
     if (currentTurn !== "AI") {
       triggerButtonShake("dicebutton");
     } else if (currentTurn === "AI") {
@@ -222,7 +223,6 @@ function LocalGame() {
     socket.on("error", (error: any) => {
       console.error("Error making move:", error.message);
     });
-    fetchGameState();
   };
 
   const fetchAIPlay = () => {
@@ -298,7 +298,6 @@ function LocalGame() {
     socket.on("error", (error: any) => {
       console.error("Error rolling dice:", error.message);
     });
-    fetchGameState();
   };
 
   const checkWinner = async () => {
@@ -338,7 +337,6 @@ function LocalGame() {
     socket.on("error", (error: any) => {
       console.error("Error undoing move:", error.message);
     });
-    fetchGameState();
   };
 
   const redo = async () => {
@@ -360,7 +358,6 @@ function LocalGame() {
     socket.on("error", (error: any) => {
       console.error("Error redoing move:", error.message);
     });
-    fetchGameState();
   };
 
   const changeTurn = () => {
@@ -374,7 +371,6 @@ function LocalGame() {
     socket.on("error", (error: any) => {
       console.error("Error changing turn:", error.message);
     });
-    fetchGameState();
   };
 
   const restartGame = async () => {
@@ -393,7 +389,6 @@ function LocalGame() {
     socket.on("error", (error: any) => {
       console.error("Error restarting game:", error.message);
     });
-    fetchGameState();
   };
 
   const fetchColor = async () => {
