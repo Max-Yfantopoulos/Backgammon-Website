@@ -13,7 +13,7 @@ class Checker:
 
     def to_dict(self):
         return {"id": self.id, "x": self.x, "y": self.y}
-    
+
     @classmethod
     def from_dict(cls, data):
         return cls(data["id"], data["x"], data["y"])
@@ -44,6 +44,7 @@ class Player:
             "num_dead_pieces": self.num_dead_pieces,
             "AI": self.AI,
         }
+
     @classmethod
     def from_dict(cls, data):
         player = cls(
@@ -65,7 +66,7 @@ class Board:
 
     def to_dict(self):
         return {"board": self.board.tolist()}
-    
+
     @classmethod
     def from_dict(cls, data):
         board = cls()
@@ -216,6 +217,7 @@ class Backgammon:
         self.history_pointer = -1
         self.real_game = True
         self.end_of_turn = False
+        self.num_restarts = 0
         self.determine_first_turn()
         self.message = ""
         # [id, x, y] (1 is for black and -1 is for white)
@@ -287,31 +289,36 @@ class Backgammon:
 
     def to_json(self):
         """Serialize the game state to a JSON-compatible dictionary."""
-        return json.dumps({
-            "players": [player.to_dict() for player in self.players],
-            "game_board": self.game_board.to_dict(),
-            "current_turn": self.current_turn,
-            "rolls": self.rolls,
-            "history": [
-                {
-                "Board": state["Board"].to_dict(),
-                "Players": [player.to_dict() for player in state["Players"]],
-                "Current_turn": state["Current_turn"],
-                "Rolls": state["Rolls"],
-                "Columns": state["Columns"],
-                "Checkers": [checker.to_dict() for checker in state["Checkers"]],
-                "Message": state["Message"],
-                }
-                for state in self.history
-            ],
-            "history_pointer": self.history_pointer,
-            "real_game": self.real_game,
-            "end_of_turn": self.end_of_turn,
-            "message": self.message,
-            "checkers": [checker.to_dict() for checker in self.checkers],
-            "columns": {key: value for key, value in self.columns.items()},
-        })
-    
+        return json.dumps(
+            {
+                "players": [player.to_dict() for player in self.players],
+                "game_board": self.game_board.to_dict(),
+                "current_turn": self.current_turn,
+                "rolls": self.rolls,
+                "history": [
+                    {
+                        "Board": state["Board"].to_dict(),
+                        "Players": [player.to_dict() for player in state["Players"]],
+                        "Current_turn": state["Current_turn"],
+                        "Rolls": state["Rolls"],
+                        "Columns": state["Columns"],
+                        "Checkers": [
+                            checker.to_dict() for checker in state["Checkers"]
+                        ],
+                        "Message": state["Message"],
+                    }
+                    for state in self.history
+                ],
+                "history_pointer": self.history_pointer,
+                "real_game": self.real_game,
+                "end_of_turn": self.end_of_turn,
+                "num_restarts": self.num_restarts,
+                "message": self.message,
+                "checkers": [checker.to_dict() for checker in self.checkers],
+                "columns": {key: value for key, value in self.columns.items()},
+            }
+        )
+
     @classmethod
     def from_json(cls, json_data):
         """Deserialize the JSON data back into a Backgammon object."""
@@ -344,7 +351,9 @@ class Backgammon:
                 "Current_turn": state["Current_turn"],
                 "Rolls": state["Rolls"],
                 "Columns": state["Columns"],
-                "Checkers": [Checker.from_dict(checker) for checker in state["Checkers"]],
+                "Checkers": [
+                    Checker.from_dict(checker) for checker in state["Checkers"]
+                ],
                 "Message": state["Message"],
             }
             for state in data["history"]
@@ -352,11 +361,12 @@ class Backgammon:
         game.history_pointer = data["history_pointer"]
         game.real_game = data["real_game"]
         game.end_of_turn = data["end_of_turn"]
+        game.num_restarts = data["num_restarts"]
         game.message = data["message"]
         game.checkers = [Checker.from_dict(c) for c in data["checkers"]]
         game.columns = {int(key): value for key, value in data["columns"].items()}
         return game
-    
+
     def update_locations(self, start, end):
         checker_idx = self.columns[start].pop()
         checker = self.checkers[checker_idx]
@@ -615,7 +625,9 @@ class Backgammon:
         return False
 
     def is_possible_move(self):
-        print(self.game_board.possible_starts(self.rolls, self.players[self.current_turn]))
+        print(
+            self.game_board.possible_starts(self.rolls, self.players[self.current_turn])
+        )
         if (
             self.game_board.possible_starts(self.rolls, self.players[self.current_turn])
             != []
@@ -760,6 +772,7 @@ class Backgammon:
         self.history_pointer = -1
         self.real_game = True
         self.end_of_turn = False
+        self.num_restarts = 0
         self.determine_first_turn()
         self.message = ""
         self.checkers = [

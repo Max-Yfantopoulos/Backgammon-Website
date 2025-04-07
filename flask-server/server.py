@@ -80,6 +80,7 @@ def process_state(game_id):
         "current_turn": game.players[game.current_turn].name,
         "rolls": game.rolls,
         "checkers_location": [checker.to_dict() for checker in game.checkers],
+        "num_restarts": game.num_restarts,
     }, 200
 
 
@@ -238,13 +239,24 @@ def process_restart_game(game_id):
     if not game_data:
         return {"error": "Game not found"}, 404
     game = Backgammon.from_json(game_data)
-    game.restart_game()
+    game.num_restarts += 1
+    if game.num_restarts == 2:
+        game.restart_game()
+        save_game(game_id, game.to_json())
+        return {
+            "game": "game restarted",
+            "current_turn": game.players[game.current_turn].name,
+            "rolls": game.rolls,
+            "checkers_location": [checker.to_dict() for checker in game.checkers],
+            "num_restarts": game.num_restarts,
+        }, 200
     save_game(game_id, game.to_json())
     return {
-        "game": "game restarted",
+        "game": "game not restarted yet",
         "current_turn": game.players[game.current_turn].name,
         "rolls": game.rolls,
         "checkers_location": [checker.to_dict() for checker in game.checkers],
+        "num_restarts": game.num_restarts,
     }, 200
 
 

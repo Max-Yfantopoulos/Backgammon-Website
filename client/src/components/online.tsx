@@ -38,6 +38,9 @@ function OnlineGame() {
   const [gameId, setGameId] = useState("");
   const [createdCode, setCreatedCode] = useState("");
   const [readyToStart, setReadyToStart] = useState<boolean>(false);
+  const [restartPressed, setRestartPressed] = useState<boolean>(false);
+  const [numRestartGames, setNumRestartGames] = useState<number>(0);
+  const [playerStatus, setPlayerStatus] = useState<string>("");
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCode(event.target.value);
@@ -53,6 +56,7 @@ function OnlineGame() {
   useEffect(() => {
     if (readyToStart) {
       console.log("Current gameId:", gameId);
+      fetchGameState();
       if (currentDice.length > 0 && currentTurn != "AI") {
         isPossibleMove();
       }
@@ -60,6 +64,11 @@ function OnlineGame() {
         const check = await checkWinner();
         if (check) {
           setGameOver(true);
+          if (currentTurn === name) {
+            setPlayerStatus("Winner");
+          } else {
+            setPlayerStatus("Loser");
+          }
           const popup = document.getElementById("popup");
 
           if (popup) {
@@ -82,8 +91,11 @@ function OnlineGame() {
   }, [gameId]);
 
   useEffect(() => {
-    if (currentTurn === name) {
-      //triggerButtonShake("dicebutton");
+    if (readyToStart) {
+      fetchGameState();
+      if (currentTurn === name) {
+        //triggerButtonShake("dicebutton");
+      }
     }
   }, [currentTurn]);
 
@@ -139,14 +151,10 @@ function OnlineGame() {
     } else if (position == -98) {
     }
     if (position == -3) {
-      restartGame();
-      fetchGameState();
-      const popup = document.getElementById("popup");
-      if (popup) {
-        popup.style.display = "none";
-      } else {
-        console.error("Couldn't find popup element");
+      if (!restartPressed) {
+        restartGame();
       }
+      setRestartPressed(true);
     } else if (position == -1) {
       navigate("/");
     }
@@ -185,7 +193,7 @@ function OnlineGame() {
   };
 
   const fetchGameState = () => {
-    socket.off("fetch_state");
+    socket.off("state_fetched");
     socket.off("error");
     socket.emit("fetch_state", { game_id: gameId });
     socket.on("state_fetched", (data: any) => {
@@ -193,11 +201,20 @@ function OnlineGame() {
       if (data.current_turn) {
         setCurrentTurn(data.current_turn);
       }
-      if (data.rolls) {
+      console.log(data.rolls.length);
+      console.log(currentDice.length);
+      if (
+        data.rolls &&
+        JSON.stringify(data.rolls) !== JSON.stringify(currentDice)
+      ) {
         setCurrentDice(data.rolls);
       }
       if (data.checkers_location) {
         setCurrentLocations(data.checkers_location);
+      }
+
+      if (data.num_restarts) {
+        setNumRestartGames(data.num_restarts);
       }
       console.log("Updated State:", currentLocations);
     });
@@ -234,7 +251,6 @@ function OnlineGame() {
     socket.on("error", (error: any) => {
       console.error("Error making move:", error.message);
     });
-    fetchGameState();
   };
 
   const pickStart = (position: number) => {
@@ -256,7 +272,7 @@ function OnlineGame() {
   };
 
   const isPossibleMove = () => {
-    socket.off("is_possible_move");
+    socket.off("possible_move_checked");
     socket.off("error");
     socket.emit("is_possible_move", { game_id: gameId });
     socket.on("possible_move_checked", (data: any) => {
@@ -283,6 +299,7 @@ function OnlineGame() {
     socket.off("error");
     socket.emit("roll_dice", { game_id: gameId });
     socket.on("dice_rolled", (data: any) => {
+      console.log("rollllllllllllllll");
       if (data.message) {
         setCurrentDice(data.rolls);
       } else {
@@ -293,7 +310,6 @@ function OnlineGame() {
     socket.on("error", (error: any) => {
       console.error("Error rolling dice:", error.message);
     });
-    fetchGameState();
   };
 
   const checkWinner = async () => {
@@ -333,7 +349,6 @@ function OnlineGame() {
     socket.on("error", (error: any) => {
       console.error("Error undoing move:", error.message);
     });
-    fetchGameState();
   };
 
   const redo = async () => {
@@ -359,7 +374,6 @@ function OnlineGame() {
     socket.on("error", (error: any) => {
       console.error("Error redoing move:", error.message);
     });
-    fetchGameState();
   };
 
   const changeTurn = () => {
@@ -373,7 +387,6 @@ function OnlineGame() {
     socket.on("error", (error: any) => {
       console.error("Error changing turn:", error.message);
     });
-    fetchGameState();
   };
 
   const restartGame = async () => {
@@ -381,18 +394,28 @@ function OnlineGame() {
     socket.off("error");
     socket.emit("restart_game", { game_id: gameId });
     socket.on("game_restarted", (data: any) => {
+      console.log("wut");
       setCurrentTurn(data.current_turn);
       setPreviousPosition(null);
       setCurrentDice(data.rolls);
       setValidMoves({});
       setCurrentLocations(data.checkers_location);
-      setGameOver(false);
+      setNumRestartGames(data.num_restarts);
+      if (data.game === "game restarted") {
+        const popup = document.getElementById("popup");
+        if (popup) {
+          popup.style.display = "none";
+        } else {
+          console.error("Couldn't find popup element");
+        }
+        setGameOver(false);
+        setRestartPressed(false);
+      }
     });
 
     socket.on("error", (error: any) => {
       console.error("Error restarting game:", error.message);
     });
-    fetchGameState();
   };
 
   const fetchColor = async () => {
@@ -943,8 +966,26 @@ function OnlineGame() {
             top: `${currentLocations[29]?.y || 0}%`,
           }}
         ></div>
-        <div className="popup" id="popup">
-          <p className="no-margin">Congrats {currentTurn} you won the game!</p>
+        <div
+          className={`popup ${
+            playerStatus === "Winner"
+              ? "popup-winner"
+              : playerStatus === "Loser"
+              ? "popup-loser"
+              : ""
+          }`}
+          id="popup"
+        >
+          <br />
+          <p>
+            {playerStatus === "Winner"
+              ? `Congrats ${name} you won the game!`
+              : playerStatus === "Loser"
+              ? `Unforunately you lost the game ${name}...`
+              : ""}
+          </p>
+          <br />
+          <p>{numRestartGames} / 2 player want to restart!</p>
           <button className="popup-home" onClick={() => handleClick(-1)}>
             ↵
           </button>

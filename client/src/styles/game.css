@@ -191,15 +191,15 @@
 }
 
 .popup {
-  width: 60%;
-  height: 50%;
+  width: 70%;
+  height: 70%;
   padding: 10px 30px 10px 30px;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   background-color: lightblue;
-  font-size: clamp(0.5rem, 1.8vw, 4vh);
+  font-size: clamp(0.01rem, 1.5vw, 3vh);
   font-weight: bold;
   text-align: center;
   border: 2px solid black;
@@ -207,6 +207,14 @@
   z-index: 200;
   display: none;
   box-sizing: border-box;
+}
+
+.popup-winner {
+  background-color: lightgreen;
+}
+
+.popup-loser {
+  background-color: lightcoral;
 }
 
 p {
@@ -295,7 +303,6 @@ button:active {
   width: clamp(1rem, 7vw, 13.8vh);
   font-size: clamp(0.1rem, 1.4vw, 2.76vh);
   font-weight: bold;
-  aspect-ratio: 2.2;
   border-radius: 50px;
 }
 

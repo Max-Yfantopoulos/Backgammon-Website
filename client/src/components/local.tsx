@@ -33,7 +33,6 @@ function LocalGame() {
     [key: string]: boolean;
   }>({});
   const [readyToStart, setReadyToStart] = useState<boolean>(false);
-  const [aiPlaying, setAIPlaying] = useState(false);
 
   useEffect(() => {
     if (player_one_name && player_two_name) {
@@ -45,11 +44,11 @@ function LocalGame() {
 
   useEffect(() => {
     if (readyToStart) {
+      fetchGameState();
       if (currentDice.length > 0 && currentTurn != "AI") {
         isPossibleMove();
       }
-      if (currentTurn === "AI" && !aiPlaying) {
-        setAIPlaying(true);
+      if (currentTurn === "AI") {
         fetchAIPlay();
       }
       const handleWin = async () => {
@@ -83,7 +82,6 @@ function LocalGame() {
       if (currentTurn !== "AI") {
         triggerButtonShake("dicebutton");
       } else if (currentTurn === "AI") {
-        setAIPlaying(false);
         if (currentDice.length === 0) {
           rollDice();
         }
@@ -94,7 +92,6 @@ function LocalGame() {
   const handleClick = async (position: number) => {
     if (position == -3) {
       restartGame();
-      fetchGameState();
       const popup = document.getElementById("popup");
       if (popup) {
         popup.style.display = "none";
@@ -184,7 +181,10 @@ function LocalGame() {
       if (data.current_turn) {
         setCurrentTurn(data.current_turn);
       }
-      if (data.rolls) {
+      if (
+        data.rolls &&
+        JSON.stringify(data.rolls) !== JSON.stringify(currentDice)
+      ) {
         setCurrentDice(data.rolls);
       }
       if (data.checkers_location) {
