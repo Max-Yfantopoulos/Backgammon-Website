@@ -205,8 +205,15 @@
   border: 2px solid black;
   border-radius: 50px;
   z-index: 200;
-  display: none;
+  display: inline-block;
   box-sizing: border-box;
+}
+
+.text-in-middle {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
 }
 
 .popup-winner {

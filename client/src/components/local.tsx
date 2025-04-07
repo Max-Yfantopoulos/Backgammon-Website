@@ -899,7 +899,9 @@ function LocalGame() {
           }}
         ></div>
         <div className="popup" id="popup">
-          <p className="no-margin">Congrats {currentTurn} you won the game!</p>
+          <p className="text-in-middle">
+            Congrats {currentTurn} you won the game!
+          </p>
           <button className="popup-home" onClick={() => handleClick(-1)}>
             ↵
           </button>
