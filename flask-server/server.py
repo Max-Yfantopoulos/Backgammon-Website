@@ -762,9 +762,8 @@ def handle_leave_game(data):
     if not game_id:
         socketio.emit("error", {"message": "Missing game ID"})
         return
-
     leave_room(game_id)
-    socketio.emit("left_game", {"message": "Left the game"}, room=game_id)
+    socketio.emit("game_left", {"message": "Left the game"}, to=request.sid)
 
 
 if __name__ == "__main__":
