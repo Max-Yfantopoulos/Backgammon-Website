@@ -545,6 +545,53 @@ function OnlineGame() {
       </button>
       <h1>Maxgammon Game</h1>
       <div className="board">
+        <div className="dice-container">
+          {currentDice.map((value, index) => (
+            <div key={index} className="real-dice">
+              {value === 1 && <div className="center-dot"></div>}
+              {value === 2 && (
+                <>
+                  <div className="bottom-left-dot"></div>
+                  <div className="top-right-dot"></div>
+                </>
+              )}
+              {value === 3 && (
+                <>
+                  <div className="bottom-left-dot"></div>
+                  <div className="center-dot"></div>
+                  <div className="top-right-dot"></div>
+                </>
+              )}
+              {value === 4 && (
+                <>
+                  <div className="top-left-dot"></div>
+                  <div className="bottom-left-dot"></div>
+                  <div className="top-right-dot"></div>
+                  <div className="bottom-right-dot"></div>
+                </>
+              )}
+              {value === 5 && (
+                <>
+                  <div className="top-left-dot"></div>
+                  <div className="bottom-left-dot"></div>
+                  <div className="center-dot"></div>
+                  <div className="top-right-dot"></div>
+                  <div className="bottom-right-dot"></div>
+                </>
+              )}
+              {value === 6 && (
+                <>
+                  <div className="top-left-dot"></div>
+                  <div className="middle-left-dot"></div>
+                  <div className="bottom-left-dot"></div>
+                  <div className="top-right-dot"></div>
+                  <div className="middle-right-dot"></div>
+                  <div className="bottom-right-dot"></div>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
         <div className="dead-and-home-box">
           <div
             className="position-box-top-dead-and-home"
@@ -1074,7 +1121,7 @@ function OnlineGame() {
         </button>
       </div>
       <div className="name-container">
-        <div className="turn">Current Turn: {currentTurn}</div>
+        <div className="turn">{currentTurn}'s turn</div>
         <div
           className="name-checker"
           style={{
@@ -1082,8 +1129,6 @@ function OnlineGame() {
           }}
         ></div>
       </div>
-
-      <div className="rolls">Rolls: {currentDice.toString()}</div>
     </div>
   );
 }

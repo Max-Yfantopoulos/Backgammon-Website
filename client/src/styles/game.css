@@ -89,7 +89,7 @@
 .position-box-bottom {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 90%;
   background-color: rgba(240, 230, 140, 0);
   border: 1px solid rgba(204, 204, 204, 0);
   cursor: pointer;
@@ -102,6 +102,8 @@
 }
 
 .position-box-bottom {
+  position: absolute;
+  bottom: 0;
   border-bottom: 0px;
 }
 
@@ -347,6 +349,82 @@ button:active {
   opacity: 1;
   border-radius: 50%;
   z-index: 1;
+}
+
+.dice-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  left: 28.5%;
+  width: 35%;
+  height: 8%;
+  transform: translate(-50%, -50%);
+  gap: 7%;
+}
+
+.real-dice {
+  position: relative;
+  height: 100%;
+  width: auto;
+  aspect-ratio: 1;
+  background-color: white;
+  border-radius: 15%;
+  border: clamp(0.1vh, 0.1vw, 0.2vh) solid black;
+  z-index: 101;
+}
+
+.center-dot,
+.top-left-dot,
+.bottom-left-dot,
+.top-right-dot,
+.bottom-right-dot,
+.middle-left-dot,
+.middle-right-dot {
+  width: 15%;
+  height: 15%;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.center-dot {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.top-left-dot {
+  top: 20%;
+  left: 20%;
+}
+
+.bottom-left-dot {
+  bottom: 20%;
+  left: 20%;
+}
+
+.top-right-dot {
+  top: 20%;
+  right: 20%;
+}
+
+.bottom-right-dot {
+  bottom: 20%;
+  right: 20%;
+}
+
+.middle-left-dot {
+  top: 50%;
+  left: 20%;
+  transform: translateY(-50%);
+}
+
+.middle-right-dot {
+  top: 50%;
+  right: 20%;
+  transform: translateY(-50%);
 }
 
 @keyframes shake {
