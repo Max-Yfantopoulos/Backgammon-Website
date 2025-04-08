@@ -5,6 +5,8 @@ import io from "socket.io-client";
 import "../styles/game.css";
 import clickSound from "/assets/sounds/click-sound.wav";
 import rollSound from "/assets/sounds/roll-sound.wav";
+import doneSound from "/assets/sounds/done-sound.wav";
+import moveCheckerSound from "/assets/sounds/move-checker-sound.wav";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
@@ -38,7 +40,9 @@ function LocalGame() {
   const [readyToStart, setReadyToStart] = useState<boolean>(false);
 
   const [playClickSound] = useSound(clickSound);
-  const [playRollSound] = useSound(rollSound);
+  const [playRollSound] = useSound(rollSound, { volume: 0.3 });
+  const [playDoneSound] = useSound(doneSound);
+  const [playMoveCheckerSound] = useSound(moveCheckerSound, { volume: 0.2 });
 
   useEffect(() => {
     if (player_one_name && player_two_name) {
@@ -220,6 +224,12 @@ function LocalGame() {
         setPreviousPosition(null);
         setCurrentDice(data.rolls);
         setCurrentLocations(data.checkers_location);
+        if (
+          JSON.stringify(data.checkers_location) !==
+          JSON.stringify(currentLocations)
+        ) {
+          playMoveCheckerSound();
+        }
         if (data.rolls.length === 0) {
           triggerButtonShake("donebutton");
         }
@@ -242,6 +252,12 @@ function LocalGame() {
         setPreviousPosition(null);
         setCurrentDice(data.rolls);
         setCurrentLocations(data.checkers_location);
+        if (
+          JSON.stringify(data.checkers_location) !==
+          JSON.stringify(currentLocations)
+        ) {
+          playMoveCheckerSound();
+        }
         setValidMoves({});
       }
     });
@@ -341,6 +357,12 @@ function LocalGame() {
       setCurrentDice(data.rolls);
       setValidMoves({});
       setCurrentLocations(data.checkers_location);
+      if (
+        JSON.stringify(data.checkers_location) !==
+        JSON.stringify(currentLocations)
+      ) {
+        playMoveCheckerSound();
+      }
     });
 
     socket.on("error", (error: any) => {
@@ -362,6 +384,12 @@ function LocalGame() {
       setCurrentDice(data.rolls);
       setValidMoves({});
       setCurrentLocations(data.checkers_location);
+      if (
+        JSON.stringify(data.checkers_location) !==
+        JSON.stringify(currentLocations)
+      ) {
+        playMoveCheckerSound();
+      }
     });
 
     socket.on("error", (error: any) => {
@@ -374,6 +402,9 @@ function LocalGame() {
     socket.off("error");
     socket.emit("change_turn", { game_id: gameId });
     socket.on("turn_changed", (data: any) => {
+      if (JSON.stringify(data.current_turn) !== JSON.stringify(currentTurn)) {
+        playDoneSound();
+      }
       setCurrentTurn(data.current_turn);
       console.log("Turn changed to:", data.current_turn);
     });

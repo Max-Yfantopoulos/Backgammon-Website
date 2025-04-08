@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useSound from "use-sound";
 import "../styles/home.css";
 import clickSound from "/assets/sounds/click-sound.wav";
+import errorSound from "/assets/sounds/error-sound.wav";
 
 function Home() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ function Home() {
   );
 
   const [playClickSound] = useSound(clickSound);
+  const [playErrorSound] = useSound(errorSound, { volume: 0.4 });
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
@@ -35,6 +37,7 @@ function Home() {
       playClickSound();
       navigate("/local", { state: { player_one_name: names.name1 } });
     } else if (position == 0 && !names.name1) {
+      playErrorSound();
       triggerShake("first-name-input");
     } else if (position == 1 && names.name1 && names.name2) {
       playClickSound();
@@ -42,16 +45,20 @@ function Home() {
         state: { player_one_name: names.name1, player_two_name: names.name2 },
       });
     } else if (position == 1 && !names.name1 && names.name2) {
+      playErrorSound();
       triggerShake("first-name-input");
     } else if (position == 1 && names.name1 && !names.name2) {
+      playErrorSound();
       triggerShake("second-name-input");
     } else if (position == 1 && !names.name1 && !names.name2) {
+      playErrorSound();
       triggerShake("first-name-input");
       triggerShake("second-name-input");
     } else if (position == 2 && names.name1) {
       playClickSound();
       navigate("/online", { state: { name: names.name1 } });
     } else if (position == 2 && !names.name1) {
+      playErrorSound();
       triggerShake("first-name-input");
     }
   };

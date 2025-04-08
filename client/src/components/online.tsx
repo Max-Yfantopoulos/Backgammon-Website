@@ -6,6 +6,9 @@ import "../styles/online.css";
 import "../styles/game.css";
 import clickSound from "/assets/sounds/click-sound.wav";
 import rollSound from "/assets/sounds/roll-sound.wav";
+import errorSound from "/assets/sounds/error-sound.wav";
+import doneSound from "/assets/sounds/done-sound.wav";
+import moveCheckerSound from "/assets/sounds/move-checker-sound.wav";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
@@ -46,7 +49,10 @@ function OnlineGame() {
   const [playerStatus, setPlayerStatus] = useState<string>("");
 
   const [playClickSound] = useSound(clickSound);
-  const [playRollSound] = useSound(rollSound);
+  const [playRollSound] = useSound(rollSound, { volume: 0.3 });
+  const [playErrorSound] = useSound(errorSound, { volume: 0.4 });
+  const [playDoneSound] = useSound(doneSound);
+  const [playMoveCheckerSound] = useSound(moveCheckerSound, { volume: 0.2 });
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCode(event.target.value);
@@ -138,10 +144,11 @@ function OnlineGame() {
           }
         });
       });
-    } else if (position == -99 && code) {
+    } else if (position == -99) {
       console.log("Joining room with gameId:", code);
-      socket.emit("join_game", { player_name: name, game_id: code });
       socket.off("game_ready");
+      socket.off("error");
+      socket.emit("join_game", { player_name: name, game_id: code });
       socket.on("game_ready", (data: any) => {
         playClickSound();
         setReadyToStart(true);
@@ -153,9 +160,10 @@ function OnlineGame() {
           console.error("Element with ID 'lobby' not found.");
         }
       });
-      console.log("navigate");
-    } else if (position == -99 && !code) {
-      triggerNameShake("first-name-input");
+      socket.on("error", (data: any) => {
+        playErrorSound();
+        triggerNameShake("first-name-input");
+      });
     } else if (position == -98) {
     }
     if (position == -3) {
@@ -249,6 +257,12 @@ function OnlineGame() {
         setPreviousPosition(null);
         setCurrentDice(data.rolls);
         setCurrentLocations(data.checkers_location);
+        if (
+          JSON.stringify(data.checkers_location) !==
+          JSON.stringify(currentLocations)
+        ) {
+          playMoveCheckerSound();
+        }
         if (data.rolls.length === 0) {
           if (currentTurn === name) {
             //triggerButtonShake("donebutton");
@@ -356,6 +370,12 @@ function OnlineGame() {
       setCurrentDice(data.rolls);
       setValidMoves({});
       setCurrentLocations(data.checkers_location);
+      if (
+        JSON.stringify(data.checkers_location) !==
+        JSON.stringify(currentLocations)
+      ) {
+        playMoveCheckerSound();
+      }
     });
 
     socket.on("error", (error: any) => {
@@ -381,6 +401,12 @@ function OnlineGame() {
       setCurrentDice(data.rolls);
       setValidMoves({});
       setCurrentLocations(data.checkers_location);
+      if (
+        JSON.stringify(data.checkers_location) !==
+        JSON.stringify(currentLocations)
+      ) {
+        playMoveCheckerSound();
+      }
     });
 
     socket.on("error", (error: any) => {
@@ -393,6 +419,9 @@ function OnlineGame() {
     socket.off("error");
     socket.emit("change_turn", { game_id: gameId });
     socket.on("turn_changed", (data: any) => {
+      if (JSON.stringify(data.current_turn) !== JSON.stringify(currentTurn)) {
+        playDoneSound();
+      }
       setCurrentTurn(data.current_turn);
       console.log("Turn changed to:", data.current_turn);
     });
