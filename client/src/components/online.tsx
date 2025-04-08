@@ -172,7 +172,8 @@ function OnlineGame() {
       }
       setRestartPressed(true);
     } else if (position == -1) {
-      leaveGame();
+      playClickSound();
+      navigate("/");
     }
 
     if (gameOver) {
@@ -482,19 +483,19 @@ function OnlineGame() {
     });
   };
 
-  const leaveGame = () => {
-    socket.off("game_left");
-    socket.off("error");
-    socket.emit("leave_game", { game_id: gameId });
-    socket.on("game_left", () => {
-      playClickSound();
-      navigate("/");
-    });
+  // const leaveGame = () => {
+  //   socket.off("game_left");
+  //   socket.off("error");
+  //   socket.emit("leave_game", { game_id: gameId });
+  //   socket.on("game_left", () => {
+  //     playClickSound();
+  //     navigate("/");
+  //   });
 
-    socket.on("error", (error: any) => {
-      console.error("Error leaving game:", error.message);
-    });
-  };
+  //   socket.on("error", (error: any) => {
+  //     console.error("Error leaving game:", error.message);
+  //   });
+  // };
 
   return (
     <div className="container-game">
