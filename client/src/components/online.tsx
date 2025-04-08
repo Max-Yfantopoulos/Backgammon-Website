@@ -1,8 +1,11 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import useSound from "use-sound";
 import io from "socket.io-client";
 import "../styles/online.css";
 import "../styles/game.css";
+import clickSound from "/assets/sounds/click-sound.wav";
+import rollSound from "/assets/sounds/roll-sound.wav";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
@@ -41,6 +44,9 @@ function OnlineGame() {
   const [restartPressed, setRestartPressed] = useState<boolean>(false);
   const [numRestartGames, setNumRestartGames] = useState<number>(0);
   const [playerStatus, setPlayerStatus] = useState<string>("");
+
+  const [playClickSound] = useSound(clickSound);
+  const [playRollSound] = useSound(rollSound);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCode(event.target.value);
@@ -101,6 +107,7 @@ function OnlineGame() {
 
   const handleClick = async (position: number) => {
     if (position == -100) {
+      playClickSound();
       socket.emit("create_lobby", { name: name });
       socket.on("lobby_created", (data: any) => {
         console.log("Lobby created with game ID:", data.game_id);
@@ -136,6 +143,7 @@ function OnlineGame() {
       socket.emit("join_game", { player_name: name, game_id: code });
       socket.off("game_ready");
       socket.on("game_ready", (data: any) => {
+        playClickSound();
         setReadyToStart(true);
         setGameId(data.game_id);
         const lobby = document.getElementById("lobby-container");
@@ -156,6 +164,7 @@ function OnlineGame() {
       }
       setRestartPressed(true);
     } else if (position == -1) {
+      playClickSound();
       navigate("/");
     }
 
@@ -302,6 +311,9 @@ function OnlineGame() {
       console.log("rollllllllllllllll");
       if (data.message) {
         setCurrentDice(data.rolls);
+        if (JSON.stringify(data.rolls) !== JSON.stringify(currentDice)) {
+          playRollSound();
+        }
       } else {
         console.log("Unexpected Error");
       }

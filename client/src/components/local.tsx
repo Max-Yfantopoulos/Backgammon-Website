@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import useSound from "use-sound";
 import io from "socket.io-client";
 import "../styles/game.css";
+import clickSound from "/assets/sounds/click-sound.wav";
+import rollSound from "/assets/sounds/roll-sound.wav";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5001");
 
@@ -33,6 +36,9 @@ function LocalGame() {
     [key: string]: boolean;
   }>({});
   const [readyToStart, setReadyToStart] = useState<boolean>(false);
+
+  const [playClickSound] = useSound(clickSound);
+  const [playRollSound] = useSound(rollSound);
 
   useEffect(() => {
     if (player_one_name && player_two_name) {
@@ -99,6 +105,7 @@ function LocalGame() {
         console.error("Couldn't find popup element");
       }
     } else if (position == -1) {
+      playClickSound();
       navigate("/");
     }
 
@@ -288,6 +295,9 @@ function LocalGame() {
     socket.emit("roll_dice", { game_id: gameId });
     socket.on("dice_rolled", (data: any) => {
       if (data.message) {
+        if (JSON.stringify(data.rolls) !== JSON.stringify(currentDice)) {
+          playRollSound();
+        }
         setCurrentDice(data.rolls);
       } else {
         console.log("Unexpected Error");
