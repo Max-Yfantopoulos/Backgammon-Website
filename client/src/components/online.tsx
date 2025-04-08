@@ -160,7 +160,7 @@ function OnlineGame() {
           console.error("Element with ID 'lobby' not found.");
         }
       });
-      socket.on("error", (data: any) => {
+      socket.on("error", () => {
         playErrorSound();
         triggerNameShake("first-name-input");
       });
